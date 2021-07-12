@@ -1,0 +1,77 @@
+ion-header {
+    
+    background: linear-gradient(45deg, rgba(2, 0, 36, 0.9) 0%, rgba(9, 9, 121, .9) 35%, rgba(0, 212, 255, 0.97) 100%) ,url(../../assets/pattern.jpg) !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+ion-toolbar {
+  --background: none;
+  --padding-bottom: 0.5em;
+}
+
+.quicklinks {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.quicklinks div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--ion-color-light);
+  ion-button {
+      --padding-top: 0;
+      --padding-bottom: 0;
+  }
+}
+
+#container {
+    height: 70%;
+    width: 100%;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    overflow-y: scroll;
+    align-items: center;
+    text-align: center;
+    h2 {
+        color: var( --ion-color-primary);
+        width: 70%;
+        text-align: center;
+        margin-top: 0;
+        font-weight: bold;
+    }
+
+    .link {
+        margin-top: 15px;
+        text-decoration: underline;
+    }
+}
+
+
+ion-list {
+    background: none !important;
+}
+
+ion-item {
+    border-bottom: 2px solid var( --ion-color-primary);
+    margin-bottom: 10px;
+    border-bottom-left-radius: 5px;
+}
+
+.item-native {
+    padding-inline-start: 0 !important;
+    padding-left: 0 !important;
+}
+
+form {
+    width: 85%;
+    text-align: center;
+    margin: 20px auto;
+}

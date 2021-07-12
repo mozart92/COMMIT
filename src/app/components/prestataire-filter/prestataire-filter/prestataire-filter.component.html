@@ -1,0 +1,47 @@
+<div class="filter-form">
+<p>
+  Remplissez le filtre pour affiner les résultats.
+</p>
+<small *ngIf="error_mess" color="danger">{{ error_mess }}</small>
+
+<form #form="ngForm" (ngSubmit)="filter(form)">
+  <ion-list lines="none" >
+    <ion-item color="none">
+      <ion-label color="dark" position="floating">
+        <ion-icon name="business-outline"></ion-icon>
+        Nom du prestataire</ion-label>
+      <ion-input type="text" name="nom" ngModel ></ion-input>
+    </ion-item>
+
+    <ion-item color="none">
+      <ion-label color="dark" position="floating">
+        <ion-icon name="map-outline"></ion-icon>
+        Ville</ion-label>
+        <ion-select name="ville" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel>
+          <ion-select-option *ngFor="let ville of villes" value="{{ville.id}}">{{ville.name}}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item color="none">
+      <ion-label color="dark" position="floating">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+        Categorie</ion-label>
+        <ion-select name="categorie" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel  (ionChange)="loadSubs($event)">
+          <ion-select-option *ngFor="let cat of categories" value="{{cat.id}}">{{cat.designation}}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item color="none">
+      <ion-label color="dark" position="floating">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+        Sous-categorie</ion-label>
+        <ion-select name="sub_categorie" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel >
+          <ion-select-option *ngFor="let cat of subs" value="{{cat.id}}">{{cat.designation}}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+  </ion-list>
+  <ion-button expand="block" color="activblue" type="submit">Filtrer</ion-button>
+</form>
+
+</div>

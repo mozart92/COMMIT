@@ -1,0 +1,14 @@
+{
+  "appId": "com.activa.app",
+  "appName": "ruby-mobile",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 10000,
+      "spinnerColor": "#222428"
+    }
+  },
+  "cordova": {}
+}

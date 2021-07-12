@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>contract_menu</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" [routerLink]="['/dashboard']">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar *ngIf="contract">
+    <div class="quicklinks">
+      <div>
+        <ion-button fill="clear" color="light">
+          <span *ngIf="translateService.currentLang === 'fr'">{{contract.contract_infos.type_contrat.designation}}</span>
+          <span *ngIf="translateService.currentLang === 'en'">{{contract.contract_infos.type_contrat.designation_en}}</span>
+            <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]" slot="end"></ion-icon>
+        </ion-button>
+        <span color="light">Contrat numéro: {{contract.contract_infos.num_contrat}}</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div *ngIf='avenants'>
+    <ion-card class="border-blue" *ngFor="let avenant of avenants">
+      <ion-item (click)="loadDetails(avenant)" class="ion-activated" lines="none">
+        <ion-icon name="create-outline" color="primary" slot="start"></ion-icon>
+        <div class="contract-infos">
+          <ion-label color="primary">{{avenant.created_at  | date: 'dd/MM/yyyy  HH:MM'}}</ion-label>
+        </div>
+        <ion-icon name="eye-outline" color="primary" slot="end"></ion-icon>
+      </ion-item>
+    </ion-card>
+  </div>
+
+  <div *ngIf='!avenants'>
+    <p translate> no_avenant</p>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="contract && contract.contract_infos.statut==='En cours'">
+    <ion-fab-button size="small" color="primary" [routerLink]="['/contract-update/' + contract.contract_infos.num_contrat]">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>new_title</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/home"> 
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content *ngIf="news">
+  <ion-card>
+    <img src="{{serverUrl + news.image}}">
+    <ion-card-header>
+      <ion-card-subtitle>{{news.created_at   | date: 'dd MMM yyyy  HH:MM'}}</ion-card-subtitle>
+      <ion-card-title>{{news.titre}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content [innerHTML]="news.description"></ion-card-content>
+  </ion-card>
+
+</ion-content>

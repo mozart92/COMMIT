@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>card_payment_title</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/home"> 
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="paybox">
+
+    <div>
+
+    <h3><span translate>card_payment_text</span>: {{amount}} {{devise}}</h3>
+
+    <form #stripePayForm="ngForm" (ngSubmit)="stripePay(stripePayForm)">
+      <ion-list lines="none">
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating" translate>
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            card_number</ion-label>
+            <ion-input type="tel" name="numero" ngModel required="required" minlength="16" maxlength="16"></ion-input>
+        </ion-item>
+
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating" translate>
+            <ion-icon name="calendar-outline"></ion-icon>
+            exp_date</ion-label>
+          <ion-datetime name="exp_date" displayFormat="MM/YYYY" pickerFormat="MM/YYYY" ngModel required="required" min="2020" max="3500"></ion-datetime>
+        </ion-item>
+
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            CVC</ion-label>
+            <ion-input type="tel" name="cvc" ngModel required="required" minlength="3" maxlength="3"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      
+      <ion-button expand="block" color="activblue" type="submit" [disabled]="stripePayForm.invalid" translate>card_payment_button</ion-button>
+    </form>
+  </div>
+  </div>
+
+</ion-content>

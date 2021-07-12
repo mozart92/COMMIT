@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>subs_title</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/home"> 
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+  
+  <form #formSOuscrip="ngForm" (ngSubmit)="demandeSouscrip(formSOuscrip)">
+  
+  <div class="devis" *ngIf="devis_result">
+
+    <div *ngIf="devis_rewind">
+      <h3>Récap du devis</h3>
+      <ion-list>
+        <ion-item *ngFor="let key of getkeys(devis_rewind)">
+          <ion-label>{{key}} </ion-label>
+          <ion-note slot="end">{{devis_rewind[key]}}</ion-note>
+        </ion-item>
+      </ion-list>
+    </div>
+    
+    <div *ngIf="devis_result.form_souscription">
+      <h3 translate>assur_info</h3>
+
+      <ion-list lines="none" *ngIf="repeat_form">
+        
+        <div *ngFor="let i of listof(repeat_form)">
+          <h4><span translate>assured_text</span> n°{{i+1}}</h4>
+          <div  *ngFor="let field of devis_result.form_souscription">
+            <ion-item color="none" *ngIf="field.is_list">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+              </ion-label>
+                <ion-select name="{{field.nom_champ}}_{{i+1}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="checkAnswer($event)">
+                  <ion-select-option *ngFor="let option of splitString(field.valeurs)" value="{{option}}">{{option}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+
+            <ion-item color="none" *ngIf="!field.is_list && field.type!=='date'">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="person-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+              </ion-label>
+              <ion-input type="{{field.type}}" name="{{field.nom_champ}}_{{i+1}}" ngModel required="{{field.requis}}"></ion-input>
+            </ion-item>
+
+            <ion-item color="none" *ngIf="field.type==='date'">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+              </ion-label>
+              <ion-datetime name="{{field.nom_champ}}_{{i+1}}" ngModel required="{{field.requis}}"></ion-datetime>
+            </ion-item>
+
+          </div>
+      
+        </div>
+
+      </ion-list>
+
+        <ion-list lines="none" *ngIf="!repeat_form">
+
+          <!-- <ion-item color="none">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              {{devis_result.form_souscription[0].libelle}}</ion-label>
+              <ion-select name="{{devis_result.form_souscription[0].nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{devis_result.form_souscription[0].requis}}" (ionChange)="repeatFields($event)">
+                <ion-select-option *ngFor="let option of splitString(devis_result.form_souscription[0].valeurs)" value="{{option}}">{{option}}</ion-select-option>
+              </ion-select>
+          </ion-item> -->
+          
+
+          <!-- <div *ngIf="!repeat_times">
+            <div *ngFor="let i of repeat_times">
+              <h4><span translate>assured_text</span> n°{{i+1}}</h4> -->
+              <div  *ngFor="let field of devis_result.form_souscription">
+                <ion-item color="none" *ngIf="!field.is_list && field.type!=='date'">
+                  <ion-label color="activblue" position="floating">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                    <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+                  </ion-label>
+                  <ion-input type="{{field.type}}" name="{{field.nom_champ}}_{{i+1}}" ngModel required="{{field.requis}}"></ion-input>
+                </ion-item>
+  
+                <ion-item color="none" *ngIf="field.type==='date'">
+                  <ion-label color="activblue" position="floating">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                    <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+                  </ion-label>
+                  <ion-datetime name="{{field.nom_champ}}_{{i+1}}" ngModel required="{{field.requis}}"></ion-datetime>
+                </ion-item>
+
+              </div>
+          
+            <!-- </div>
+          </div> -->
+  
+  
+        </ion-list>
+    </div>
+
+    <div *ngFor="let cot of devis_result.cotation">
+      <img src="../../assets/devis_anim_2.gif" alt="">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <b> Package:</b>
+          </ion-col>
+          <ion-col>
+          {{cot.Name_FR}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <b><span translate>pay_prime</span>: </b>
+          </ion-col>
+          <ion-col>
+            {{cot.Amount}} {{devis_result.devise}}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <!-- <p translate> pdf_message </p>
+      <ion-button fill="outline" shape="round" color="activblue" [disabled]="true" (click)="download()" translate>
+        <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
+        pdf_action
+      </ion-button> -->
+
+      <ion-button fill="solid" shape="round" color="activblue" [disabled]="(devis_result.form_souscription && formSOuscrip.invalid) || !assurable" (click)="paiement(cot.Amount, formSOuscrip)" translate>
+        <ion-icon slot="start" name="cart-outline"></ion-icon>
+        subs_action
+      </ion-button>
+
+    </div>
+  
+      
+  </div>
+  </form>
+
+</ion-content>

@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title color="light" translate></ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" (click)="closeModal()">
+        <span translate>close</span>
+        <ion-icon slot="end" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list *ngIf="pos">
+    <ion-item>
+      <ion-label translate>full_name  </ion-label>:
+      <ion-badge slot="end" color="secondary">{{pos.nom}}</ion-badge>
+    </ion-item>
+    
+    <ion-item >
+      <ion-label translate>in_charge  </ion-label>:
+      <ion-badge slot="end" color="secondary">{{pos.nom_responsable}}</ion-badge>
+    </ion-item>
+
+    <ion-list-header lines="full">
+      <h3 translate>usefull_infos</h3>
+    </ion-list-header>
+
+    
+    <ion-item>
+      <ion-label translate>adress_label</ion-label>:
+      <ion-badge slot="end" color="secondary">{{pos.adresse}}</ion-badge>
+    </ion-item>
+
+    
+    <ion-item>
+      <ion-label translate>ville_label</ion-label>:
+      <ion-badge slot="end" color="secondary">{{pos.ville.name}}</ion-badge>
+    </ion-item>
+
+    
+    <ion-item >
+      <ion-label translate>phone_label</ion-label>:
+      <ion-badge slot="end" color="secondary">{{pos.telephone}}</ion-badge>
+    </ion-item>
+
+    
+    <ion-item>
+      <ion-label translate>email_label</ion-label>:
+      <ion-badge slot="end" color="secondary">{{pos.email}}</ion-badge>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

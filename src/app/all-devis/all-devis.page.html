@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>user_devis</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" [routerLink]="['/dashboard']">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-segment (ionChange)="segmentChanged($event)" value="devis_cat">
+    <ion-segment-button value="to_confirm" color="light">
+      <ion-label color="light" translate>to_confirm</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="others" color="light">
+      <ion-label color="light" translate> others </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content *ngIf='devis'>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="contentTitle==='to_confirm'">
+    <div *ngIf='devis'>
+      <div *ngFor="let avenant of devis">
+        <ion-card class="border-blue" *ngIf='avenant.statut === 2'>
+          <ion-item class="ion-activated" lines="none" [routerLink]="['/details-devis/' + avenant.id]">
+            <ion-icon name="cash-outline" color="primary" slot="start"></ion-icon>
+            <div class="contract-infos">
+              <ion-label color="primary">{{avenant.produit.nom}}</ion-label>
+              <ion-label color="primary">{{avenant.created_at  | date: 'dd/MM/yyyy  HH:mm'}}</ion-label>
+              <ion-label *ngIf='avenant.prime' color="primary">{{avenant.prime}} {{avenant.devise}}</ion-label>
+              <ion-label [color]="getColor(avenant.statut)">{{avenant.statut_human}}</ion-label>
+            </div>
+            <ion-icon name="eye-outline" color="primary" slot="end"></ion-icon>
+          </ion-item>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="contentTitle==='others'">
+    <div *ngIf='devis'>
+      <div *ngFor="let avenant of devis">
+        <ion-card class="border-blue" *ngIf='avenant.statut !== 2'>
+          <ion-item class="ion-activated" lines="none" [routerLink]="['/details-devis/' + avenant.id]">
+            <ion-icon name="cash-outline" color="primary" slot="start"></ion-icon>
+            <div class="contract-infos">
+              <ion-label color="primary">{{avenant.produit.nom}}</ion-label>
+              <ion-label color="primary">{{avenant.created_at  | date: 'dd/MM/yyyy  HH:mm'}}</ion-label>
+              <ion-label *ngIf='avenant.prime' color="primary">{{avenant.prime}} {{avenant.devise}}</ion-label>
+              <ion-label [color]="getColor(avenant.statut)">{{avenant.statut_human}}</ion-label>
+            </div>
+            <ion-icon name="eye-outline" color="primary" slot="end"></ion-icon>
+          </ion-item>
+        </ion-card>
+      </div>
+    </div>
+    <div *ngIf='!devis'>
+      <p translate> no_quote</p>
+    </div>
+  
+  </div>
+
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" color="primary" [routerLink]="['/product-devis']">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

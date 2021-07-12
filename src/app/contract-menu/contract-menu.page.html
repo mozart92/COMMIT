@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>contract_menu</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" [routerLink]="['/dashboard']">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar *ngIf="contract">
+    <div class="quicklinks">
+      <div>
+        <ion-button fill="clear" color="light">
+          <span *ngIf="translateService.currentLang === 'fr'">{{contract.contract_infos.type_contrat.designation}}</span>
+          <span *ngIf="translateService.currentLang === 'en'">{{contract.contract_infos.type_contrat.designation_en}}</span>
+          <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]" slot="end"></ion-icon>
+        </ion-button>
+        <span color="light">Contrat numéro: {{contract.contract_infos.num_contrat}}</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid *ngIf="contract">
+    <ion-row>
+      <ion-col [routerLink]="['/contract-details/' + contract.contract_infos.num_contrat]">
+        <ion-button fill="clear" color="primary" size="large" color="primary">
+          <ion-icon slot="icon-only" name="documents-outline"></ion-icon>
+        </ion-button>
+        <h6 translate>contract_details</h6>
+      </ion-col>
+      <ion-col [routerLink]="['/all-contract-update/' + contract.contract_infos.num_contrat]">
+        <ion-button fill="clear" color="primary" size="large" color="primary">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <h6 translate>avenant</h6>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="contract.type === 'non_vie' || contract.contract_infos.type_contrat.is_sinistrable === 1">
+      <ion-col [routerLink]="['/sinistres/' + contract.contract_infos.num_contrat]">
+        <ion-button fill="clear" color="primary" size="large" color="primary">
+          <ion-icon slot="icon-only" name="thunderstorm-outline"></ion-icon>
+        </ion-button>
+        <h6 translate>user_claims</h6>
+      </ion-col>
+      <ion-col *ngIf="contract.contract_infos.statut==='En cours'" [routerLink]="['/declaration-sinistre/' + contract.contract_infos.num_contrat]">
+        <ion-button fill="clear" color="primary" size="large" color="primary">
+          <ion-icon slot="icon-only" name="flash-off-outline"></ion-icon>
+        </ion-button>
+        <h6 translate>request_claim</h6>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="contract.type==='vie'">
+      <ion-col [routerLink]="['/prestations/' + contract.contract_infos.num_contrat]">
+        <ion-button fill="clear" color="primary" size="large" color="primary">
+          <ion-icon slot="icon-only" name="file-tray-full-outline"></ion-icon>
+        </ion-button>
+        <h6 translate>my_benef</h6>
+      </ion-col>
+      <ion-col *ngIf="contract.contract_infos.statut==='En cours'" [routerLink]="['/request-prestations/' + contract.contract_infos.num_contrat]">
+        <ion-button fill="clear" color="primary" size="large" color="primary">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <h6 translate>presta_request</h6>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col *ngIf="contract.type==='non_vie'" [routerLink]="['/renew-history/' + contract.contract_infos.num_contrat]">
+        <ion-button fill="clear" color="primary" size="large" color="primary">
+          <ion-icon slot="icon-only" name="cash-outline"></ion-icon>
+        </ion-button>
+        <h6 translate>prime</h6>
+      </ion-col>
+      <ion-col *ngIf="contract.type==='vie'" [routerLink]="['/prime-history/' + contract.contract_infos.num_contrat]">
+        <ion-button fill="clear" color="primary" size="large" color="primary">
+          <ion-icon slot="icon-only" name="cash-outline"></ion-icon>
+        </ion-button>
+        <h6 translate>paiement</h6>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

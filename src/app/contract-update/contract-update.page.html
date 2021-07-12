@@ -1,0 +1,274 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>avenant_request</ion-title>
+    <ion-buttons slot="end" *ngIf="contract">
+      <ion-button fill="clear" color="light" [routerLink]="['/all-contract-update/' + contract.contract_infos.num_contrat]">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar *ngIf="contract">
+    <div class="quicklinks">
+      <div>
+        <ion-button fill="clear" color="light">
+          <span *ngIf="translateService.currentLang === 'fr'">{{contract.contract_infos.type_contrat.designation}}</span>
+          <span *ngIf="translateService.currentLang === 'en'">{{contract.contract_infos.type_contrat.designation_en}}</span>
+            <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]" slot="end"></ion-icon>
+        </ion-button>
+        <span color="light" translate> <span translate>contract_number</span> {{contract.contract_infos.num_contrat}}</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form #form="ngForm" (ngSubmit)="updateContract(form)">
+      <p translate>avenant_intro</p>
+      <ion-list lines="none">
+
+        <ion-item color="none" *ngIf="formFields.includes('opt_tarif') && options">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>my_tarification</span></ion-label>
+            <ion-select name="option_tarifaire" okText="J'ai fini" cancelText="Fermer" (ionChange)="loadOptions($event)" ngModel>
+              <ion-select-option *ngFor="let option of options" value="{{option.id}}">{{option.package}} {{option.montant}}{{option.devise}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <small *ngIf="choosenOption">
+          {{choosenOption.description}}
+        </small>
+
+        <ion-item color="none" *ngIf="formFields.includes('garanties') && garanties">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>my_garanties</span></ion-label>
+            <ion-select name="garanties" okText="J'ai fini" cancelText="Fermer" multiple ngModel required>
+              <ion-select-option *ngFor="let garantie of garanties" value="{{garantie.id}}">{{garantie.designation}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <div *ngIf="formFields.includes('add_person')">
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>assure_firstname</span></ion-label>
+            <ion-input type="text" name="nom_assure" ngModel required></ion-input>
+          </ion-item>
+  
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>assure_lastname</span></ion-label>
+            <ion-input type="text" name="prenom_assure" ngModel required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label color="primary" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span translate>assure_birthdate</span></ion-label>
+            <ion-datetime displayFormat="DD-MMM-YYYY" max="{{todays}}" name="date_naiss_assure" ngModel required></ion-datetime>
+          </ion-item>
+  
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="location-outline"></ion-icon>
+              <span translate>assure_adress_label</span></ion-label>
+            <ion-input type="text" name="adresse_assure" ngModel required></ion-input>
+          </ion-item>
+  
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="call-outline"></ion-icon>
+              <span translate>assure_phone_label</span></ion-label>
+            <ion-input type="tel" name="phone_assure" ngModel required></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-item color="none" *ngIf="formFields.includes('remov_person')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>remov_assured</span></ion-label>
+            <ion-select name="assure_retire" okText="J'ai fini" cancelText="Fermer" ngModel required>
+              <ion-select-option *ngFor="let pers of contract.contract_infos.assures" value="{{pers.id}}">{{pers.nom}} {{pers.prenom}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <div *ngIf="formFields.includes('add_bien')">
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>bien_designation</span></ion-label>
+            <ion-input type="text" name="design_bien" ngModel required></ion-input>
+          </ion-item>
+
+          <ion-item color="none">
+            <ion-label color="primary"  position="stacked">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>bien_descript</span></ion-label>
+            <ion-textarea rows="6" cols="20" name="descript_bien" placeholder="Ecrivez ici..." ngModel required></ion-textarea>
+          </ion-item>
+        </div>
+
+        <ion-item color="none" *ngIf="formFields.includes('remov_bien')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>remov_bien</span></ion-label>
+            <ion-select name="bien_retire" okText="J'ai fini" cancelText="Fermer" ngModel required>
+              <ion-select-option *ngFor="let bien of contract.contract_infos.biensassures" value="{{bien.id}}">{{bien.designation}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <div *ngIf="formFields.includes('add_benef')">
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>new_benef_firstname</span></ion-label>
+            <ion-input type="text" name="nom_new_benef" ngModel required></ion-input>
+          </ion-item>
+  
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>new_benef_lastname</span></ion-label>
+            <ion-input type="text" name="prenom_new_benef" ngModel required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label color="primary" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span translate>new_benef_birthdate</span></ion-label>
+            <ion-datetime displayFormat="DD-MMM-YYYY" max="{{todays}}" name="date_naiss_new_benef" ngModel required></ion-datetime>
+          </ion-item>
+  
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="call-outline"></ion-icon>
+              <span translate>new_benef_phone_label</span></ion-label>
+            <ion-input type="tel" name="phone_new_benef" ngModel required></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-item color="none" *ngIf="formFields.includes('remov_benef')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>remov_benef</span></ion-label>
+            <ion-select name="benef_retire" okText="J'ai fini" cancelText="Fermer" ngModel required>
+              <ion-select-option *ngFor="let pers of contract.contract_infos.beneficiaires" value="{{pers.id}}">{{pers.nom}} {{pers.prenom}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('prime')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="cash-outline"></ion-icon>
+            <span translate>premium_amount</span></ion-label>
+          <ion-input type="number" name="prime" min="100" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('nom')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="person-outline"></ion-icon>
+            <span translate>firstname</span></ion-label>
+          <ion-input type="text" name="nom" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('prenom')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="person-outline"></ion-icon>
+            <span translate>lastname</span></ion-label>
+          <ion-input type="text" name="prenom" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('adresse')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="location-outline"></ion-icon>
+            <span translate>adress_label</span></ion-label>
+          <ion-input type="text" name="adresse" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('phone')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="call-outline"></ion-icon>
+            <span translate>phone_label</span></ion-label>
+          <ion-input type="tel" name="phone" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('nom-benef') || formFields.includes('prenom-benef') || formFields.includes('date-naiss-benef') || formFields.includes('phone-benef')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>update_benef</span></ion-label>
+            <ion-select name="benef_update" okText="J'ai fini" cancelText="Fermer" ngModel required>
+              <ion-select-option *ngFor="let pers of contract.contract_infos.beneficiaires" value="{{pers.id}}">{{pers.nom}} {{pers.prenom}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('nom-benef')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="person-outline"></ion-icon>
+            <span translate>benef_firstname</span> </ion-label>
+          <ion-input type="text" name="nom_benef" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('prenom-benef')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="person-outline"></ion-icon>
+            <span translate>benef_lastname</span></ion-label>
+          <ion-input type="text" name="prenom_benef" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="formFields.includes('date-naiss-benef')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span translate>benef_birthdate</span></ion-label>
+          <ion-datetime displayFormat="DD-MMM-YYYY" max="{{todays}}" name="date_naiss_benef" ngModel required></ion-datetime>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('phone-benef')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="call-outline"></ion-icon>
+            <span translate>benef_phone</span></ion-label>
+          <ion-input type="tel" name="phone_benef" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('duree-contrat')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="time-outline"></ion-icon>
+            <span translate>contract_duration</span></ion-label>
+          <ion-input type="number" name="duree_contrat" min="1" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('moyen-paiement')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="wallet-outline"></ion-icon>
+            <span translate>payment_trough</span></ion-label>
+            <ion-select name="moyen_paiement" value="Virement Bancaire" okText="J'ai fini" cancelText="Fermer" ngModel required>
+              <ion-select-option value="virement"><span translate>transfer</span></ion-select-option>
+              <ion-select-option value="momo">MTN MoMo</ion-select-option>
+              <ion-select-option value="om">Orange Money</ion-select-option>
+              <ion-select-option value="liquide"><span translate>liquid</span></ion-select-option>
+              <ion-select-option value="visa"><span translate>visa_card</span></ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="formFields.includes('periode-paiement')">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span translate>payment_period</span></ion-label>
+            <ion-select name="periode_paiement" value="mensuelle" okText="J'ai fini" cancelText="Fermer" ngModel required>
+              <ion-select-option value="mensuelle"><span translate>mensuel</span></ion-select-option>
+              <ion-select-option value="trimestrielle"><span translate>trimes</span></ion-select-option>
+              <ion-select-option value="semestrielle"><span translate>semes</span></ion-select-option>
+              <ion-select-option value="anuelle"><span translate>anual</span></ion-select-option>
+              <ion-select-option value="unique"><span translate>unik</span></ion-select-option>
+            </ion-select>
+        </ion-item>
+
+      </ion-list>
+      <ion-button expand="block" color="primary" type="submit" [disabled]="form.invalid" translate>submit</ion-button>
+
+    </form>
+
+</ion-content>

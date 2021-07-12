@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title *ngIf="prestation">{{prestation.type_prestation.designation}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list *ngIf="prestation">
+    
+    <ion-item *ngIf="prestation.montant">
+      <p>Montant</p>
+      <ion-note slot="end">{{prestation.montant_initial}} XAF</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="prestation.penalites" >
+      <p>Penalités</p>
+      <ion-note slot="end">{{prestation.penalites}} XAF</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="prestation.total">
+      <p>Montant Total</p>
+      <ion-note slot="end">{{prestation.total}} XAF</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="prestation.montant_mensualite">
+      <p>Montant Mensualités</p>
+      <ion-note slot="end">{{prestation.montant_mensualite}} XAF</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="prestation.delai_remboursement">
+      <p>Delai remboursement</p>
+      <ion-note slot="end">{{prestation.delai_remboursement}} Mois</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="prestation.cumul_remboursement">
+      <p>Cumul remboursement</p>
+      <ion-note slot="end">{{prestation.cumul_remboursement}} XAF</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="prestation.mode_remboursement">
+      <p>Mode remboursement</p>
+      <ion-note slot="end">{{prestation.mode_remboursement}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="prestation.mode_paiement">
+      <p>Mode paiement</p>
+      <ion-note slot="end">{{prestation.mode_paiement}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="prestation.motif_rachat">
+      <p>Motif rachat</p>
+      <ion-note slot="end">{{prestation.motif_rachat}}</ion-note>
+    </ion-item>
+
+
+  </ion-list>
+  
+</ion-content>

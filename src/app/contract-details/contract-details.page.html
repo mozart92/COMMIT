@@ -1,0 +1,201 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>contract_details</ion-title>
+    <ion-buttons slot="end" *ngIf="contract">
+      <ion-button fill="clear" color="light" [routerLink]="['/contract-menu/' + contract.contract_infos.num_contrat]">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-segment (ionChange)="segmentChanged($event)" value="Garanties">
+    <ion-segment-button value="Garanties" color="light">
+      <ion-label color="light" translate>garanties</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="Primes" color="light">
+      <ion-label color="light" *ngIf="contract">
+        <span *ngIf="contract.type === 'non_vie'" translate>prime</span>
+        <span *ngIf="contract.type === 'vie'" translate>paiement</span>
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="contract">
+  <div *ngIf="contentTitle==='Garanties'">
+    <div  *ngIf="contract.type === 'non_vie' && contract.contract_infos.type_contrat.for_bien === 1">
+      <div class="infos-bien" *ngFor="let bien of contract.contract_infos.biensassures">
+        <ion-fab vertical="top" horizontal="end" slot="fixed">
+          <ion-fab-button size="small" [color]="contract.contract_infos.statut==='En cours' ? 'success' : 'danger'">
+            {{contract.contract_infos.statut}}
+          </ion-fab-button>
+        </ion-fab>
+        <div>
+          <ion-button color="primary" size="large" shape="round">
+              <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]"></ion-icon>
+          </ion-button>
+          <span color="light" translate>bien_intro</span>
+        </div>
+        <ion-grid >
+          <ion-row>
+            <ion-col class="ion-align-self-start">
+              {{bien.designation}}:
+            </ion-col>
+            <ion-col>
+              {{bien.description}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-list>
+          <ion-item-group *ngFor="let garantie of bien.garanties">
+            <ion-item>
+              <p *ngIf="translateService.currentLang==='fr'">
+                {{garantie.designation}}
+              </p>
+              <p *ngIf="translateService.currentLang==='en'">
+                {{garantie.designation_en}}
+              </p>
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+      </div>
+    
+    </div>
+
+    <div  *ngIf="contract.type === 'vie' || contract.contract_infos.type_contrat.for_bien !== 1">
+      <div class="infos-bien" *ngFor="let bien of contract.contract_infos.assures">
+        <ion-fab vertical="top" horizontal="end" slot="fixed">
+          <ion-fab-button size="small" [color]="contract.contract_infos.statut==='En cours' ? 'success' : 'danger'"> 
+            {{contract.contract_infos.statut}}
+          </ion-fab-button>
+        </ion-fab>
+        <div>
+          <ion-button color="primary" size="large" shape="round">
+              <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]"></ion-icon>
+          </ion-button>
+          <span color="light">assure_intro</span>
+        </div>
+        <ion-grid >
+          <ion-row>
+            <ion-col class="ion-align-self-start" translate>
+              full_name
+            </ion-col>
+            <ion-col>
+              {{bien.nom}} {{bien.prenom}}
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="ion-align-self-start" translate>
+              phone_label
+            </ion-col>
+            <ion-col>
+              {{bien.telephone}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-list>
+          <ion-item-group *ngFor="let garantie of bien.garanties">
+            <ion-item>
+              <p *ngIf="translateService.currentLang==='fr'">
+                {{garantie.designation}}
+              </p>
+              <p *ngIf="translateService.currentLang==='en'">
+                {{garantie.designation_en}}
+              </p>
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+      </div>
+    
+    </div>
+  </div>
+  <div *ngIf="contentTitle==='Primes'">
+    <div class="infos-versement">
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngIf="contract.type==='non_vie'">
+            <ion-item class="ion-activated" lines="none">
+              <ion-icon name="cash-outline" color="primary" slot="start"></ion-icon>
+              <div class="contract-infos">
+                <ion-label color="dark"> <small translate>paiement</small></ion-label>
+                <ion-label color="primary">{{contract.contract_infos.prime}} XAF</ion-label>
+              </div>
+            </ion-item>
+          </ion-col>
+          <ion-col *ngIf="contract.type==='vie'">
+            <ion-item class="ion-activated" lines="none">
+              <ion-icon name="cash-outline" color="primary" slot="start"></ion-icon>
+              <div class="contract-infos">
+                <ion-label color="dark"> <small translate>paiement</small></ion-label>
+                <ion-label color="primary">{{contract.contract_infos.paiments}} XAF</ion-label>
+              </div>
+            </ion-item>
+          </ion-col>
+          <ion-col *ngIf="contract.type==='vie'">
+            <ion-item  class="ion-activated" lines="none">
+              <ion-icon name="cash-outline" color="danger" slot="start"></ion-icon>
+              <div class="contract-infos">
+                <ion-label color="dark"> <small translate>non_paiement</small></ion-label>
+                <ion-label color="danger">{{contract.contract_infos.impayes}} XAF</ion-label>
+              </div>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col *ngIf="contract.type==='vie'">
+            <ion-item class="ion-activated" lines="none">
+              <ion-icon name="calendar-outline" color="primary" slot="start"></ion-icon>
+              <div class="contract-infos">
+                <ion-label color="dark"> <small translate>period</small></ion-label>
+                <ion-label color="primary">{{contract.contract_infos.periodicite}}</ion-label>
+              </div>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item class="ion-activated" lines="none">
+              <ion-icon name="calendar-outline" color="primary" slot="start"></ion-icon>
+              <div class="contract-infos">
+                <ion-label color="dark"> <small translate>due_date</small></ion-label>
+                <ion-label color="primary">{{contract.contract_infos.date_echeance}}</ion-label>
+              </div>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-list>
+        <ion-item>
+          <ion-label translate>effect_date</ion-label>
+          <ion-note slot="end">{{contract.contract_infos.date_effet}}</ion-note>
+        </ion-item>
+        <ion-item *ngIf="contract.type==='vie'">
+          <ion-label translate>duration</ion-label>
+          <ion-note slot="end"> {{contract.contract_infos.date_effet}} Mois</ion-note>
+        </ion-item>
+        <ion-item *ngIf="contract.type==='vie'">
+          <ion-label translate>period_amount</ion-label>
+          <ion-note slot="end"> {{contract.contract_infos.montant_periodique}} XAF</ion-note>
+        </ion-item>
+        <ion-item *ngIf="contract.type==='vie'">
+          <ion-label translate>emission</ion-label>
+          <ion-note slot="end">{{contract.contract_infos.emission}} XAF </ion-note>
+        </ion-item>
+        <!-- <ion-item-group *ngIf="contract.type==='vie'">
+          <ion-item-divider color="primary">
+            <ion-label> Infos Intermédiaire</ion-label>
+          </ion-item-divider>
+          <ion-item *ngFor="let bien of getKeys(contract.contract_infos.intermediaire)">
+            <ion-label> {{bien}}</ion-label>
+            <ion-note slot="end">{{contract.contract_infos.intermediaire[bien]}}</ion-note>
+          </ion-item>
+        </ion-item-group> -->
+      </ion-list>
+      <ion-button *ngIf="contract.type==='vie'" size="small" expand="block" color="primary" fill="clear" class="link" (click)="askPaiementState()" translate>payment_state</ion-button>
+    </div>
+  </div>
+</div>   
+
+</ion-content>

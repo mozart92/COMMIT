@@ -1,0 +1,426 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>sinistre_request</ion-title>
+    <ion-buttons slot="end" *ngIf="contract">
+      <ion-button fill="clear" color="light" [routerLink]="['/contract-menu/' + contract.contract_infos.num_contrat]">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar *ngIf="contract">
+    <div class="quicklinks">
+      <div>
+        <ion-button fill="clear" color="light">
+          <span *ngIf="translateService.currentLang === 'fr'">{{contract.contract_infos.type_contrat.designation}}</span>
+          <span *ngIf="translateService.currentLang === 'en'">{{contract.contract_infos.type_contrat.designation_en}}</span>
+            <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]" slot="end"></ion-icon>
+        </ion-button>
+        <small color="light">Contrat numéro: {{contract.contract_infos.num_contrat}}</small>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p translate>sinistre_intro</p>
+  
+  <div *ngIf="contract && (contract.type==='vie' || contract.contract_infos.type_contrat.for_bien === 0)">
+    <form #formVie="ngForm" (ngSubmit)="sinitreVie(formVie)">
+      <ion-segment (ionChange)="segmentChanged($event)" value="champs">
+        <ion-segment-button value="champs" color="primary">
+          <ion-label>Informations</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="fichiers" color="light">
+          <ion-label translate>files</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      <ion-list lines="none" [class.hide]="contentTitle!=='champs'" >
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span translate>sinister_person</span></ion-label>
+              <ion-select name="assure" value="brown" okText="J'ai fini" [ngModel]="savedSinistre ? savedSinistre.assure : ''" cancelText="Fermer" ngModel required>
+                <ion-select-option *ngFor="let assure of contract.contract_infos.assures" value="{{assure.id}}">{{assure.nom}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+
+          <ion-item >
+            <ion-label color="primary" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span translate>sinistre_date</span></ion-label>
+            <ion-datetime displayFormat="DD-MMM-YYYY HH:mm" min="2000-01-01" max="{{todays}}" name="date_sinistre" [ngModel]="savedSinistre ? savedSinistre.date_sinistre : ''" ngModel required></ion-datetime>
+          </ion-item>
+
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>sinistre_lieu</span></ion-label>
+            <ion-input type="text" name="lieu_sinistre" [ngModel]="savedSinistre ? savedSinistre.lieu_sinistre : ''" ngModel required></ion-input>
+          </ion-item>
+
+          <ion-item color="none">
+            <ion-label color="primary"  position="stacked">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>sinistre_details</span></ion-label>
+            <ion-textarea rows="6" cols="20" name="description" [ngModel]="savedSinistre ? savedSinistre.description : ''" placeholder="Ecrivez ici..." ngModel required></ion-textarea>
+          </ion-item>
+
+      </ion-list>
+      <div [class.hide]="contentTitle!=='fichiers'">
+        <ion-item-divider color="primary">
+          <ion-label translate>
+            documents
+          </ion-label>
+        </ion-item-divider>
+
+        <p><small translate>sinistre_file_intro</small></p>
+  
+        <ion-grid>
+          <ion-row>
+            <ion-col (click)="chooseFile()">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small translate>document_label</small>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="myFiles">
+            <ion-col *ngFor="let file of myFiles">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small translate>{{file.file_name}}</small>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button expand="block" color="primary" type="submit" [disabled]="formVie.invalid" translate>submit</ion-button>
+        <ion-button expand="block" color="activgreen" (click)="saveSinistre(formVie, contract)" translate>save_label</ion-button>
+      </div>
+      
+
+    </form>
+  </div>
+
+  <div *ngIf="contract && (contract.type==='non_vie' && contract.contract_infos.type_contrat.for_bien === 1)">
+    <form #formNonVie="ngForm" (ngSubmit)="sinitreNonVie(formNonVie)">
+
+      <ion-segment (ionChange)="segmentChanged($event)" value="champs">
+        <ion-segment-button value="champs" color="primary">
+          <ion-label>Informations</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="fichiers" color="light">
+          <ion-label translate>files</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ion-list lines="none" [class.hide]="contentTitle!=='champs'">
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span translate>sinistre_bien</span></ion-label>
+              <ion-select name="bien_sinistre" [ngModel]="savedSinistre ? savedSinistre.bien_sinistre : ''" okText="J'ai fini" cancelText="Fermer"  ngModel required>
+                <ion-select-option *ngFor="let bien of contract.contract_infos.biensassures" value="{{bien.id}}">{{bien.designation}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+
+          <ion-item >
+            <ion-label color="primary" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span translate>nature_domage</span></ion-label>
+              <ion-select name="nature_dommage" [ngModel]="savedSinistre ? savedSinistre.nature_dommage : ''" okText="J'ai fini" cancelText="Fermer" ngModel required>
+                <ion-select-option value="materiel" translate>Materiel</ion-select-option>
+                <ion-select-option value="corporel" translate>Corporel</ion-select-option>
+                <ion-select-option value="materiel et corporel" translate>Materiel et Corporel</ion-select-option>
+              </ion-select>
+          </ion-item>
+
+          <ion-item >
+            <ion-label color="primary" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span translate>sinistre_date</span></ion-label>
+            <ion-datetime displayFormat="DD-MMM-YYYY HH:mm" min="2000-01-01" max="{{todays}}" name="date_sinistre" [ngModel]="savedSinistre ? savedSinistre.date_sinistre : ''" ngModel required></ion-datetime>
+          </ion-item>
+
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>sinistre_lieu</span></ion-label>
+            <ion-input type="text" name="lieu_sinistre" [ngModel]="savedSinistre ? savedSinistre.lieu_sinistre : ''" ngModel required></ion-input>
+          </ion-item>
+
+          <div *ngIf="contract.contract_infos.type_contrat.branche_name.nom_branche ==='Automobile'">
+
+            <ion-item-divider color="primary" >
+              <ion-label translate>
+                driver_intro
+              </ion-label>
+            </ion-item-divider>
+  
+            <ion-item color="none">
+              <ion-label color="primary" position="floating">
+                <ion-icon name="person-outline"></ion-icon>
+                <span translate>driver_name</span> </ion-label>
+              <ion-input type="text" name="nom_conducteur" [ngModel]="savedSinistre ? savedSinistre.nom_conducteur : ''" ngModel required></ion-input>
+            </ion-item>
+  
+            <ion-item color="none">
+              <ion-label color="primary" position="floating">
+                <ion-icon name="person-outline"></ion-icon>
+                <span translate>driver_surname</span></ion-label>
+              <ion-input type="text" name="prenom_conducteur" [ngModel]="savedSinistre ? savedSinistre.prenom_conducteur : ''" ngModel required></ion-input>
+            </ion-item>
+  
+            
+              <ion-radio-group allow-empty-selection="true" name="has_permis" [ngModel]="savedSinistre ? savedSinistre.has_permis : ''" (ionChange)="requestPermis($event)" ngModel required>
+                <ion-list-header>
+                  <ion-label>
+                    <ion-icon name="person-outline"></ion-icon>
+                    <span translate>driver_has_permis</span>
+                  </ion-label>
+                </ion-list-header>
+  
+                <ion-item>
+                  <ion-label color="primary" translate>yes_answer</ion-label>
+                  <ion-radio value="true" ></ion-radio>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="primary" translate>no_answer</ion-label>
+                  <ion-radio value="false" ></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+  
+            <ion-item color="none" *ngIf="permis">
+              <ion-label color="primary" position="floating">
+                <ion-icon name="person-outline"></ion-icon>
+                <span translate>permis_number</span></ion-label>
+              <ion-input type="text" name="numero_permis" [ngModel]="savedSinistre ? savedSinistre.numero_permis : ''" ngModel required></ion-input>
+            </ion-item>
+  
+            <ion-item *ngIf="permis">
+              <ion-label color="primary" position="floating">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span translate>validity_date</span></ion-label>
+              <ion-datetime displayFormat="DD-MMM-YYYY HH:mm" min="2000-01-01" name="validite_permis" [ngModel]="savedSinistre ? savedSinistre.validite_permis : ''" ngModel required></ion-datetime>
+            </ion-item>
+
+          </div>
+
+
+          
+            <ion-radio-group allow-empty-selection="true" name="has_dommage_tier" [ngModel]="savedSinistre ? savedSinistre.has_dommage_tier : ''" (ionChange)="askDommage($event)" ngModel required>
+              <ion-list-header>
+                <ion-label>
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span translate>dommagetier_question</span>
+                </ion-label>
+              </ion-list-header>
+
+              <ion-item>
+                <ion-label color="primary" translate>yes_answer</ion-label>
+                <ion-radio value="true"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label color="primary" translate>no_answer</ion-label>
+                <ion-radio value="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          
+
+          <ion-item *ngIf="dommage">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span translate>nature_domage</span></ion-label>
+              <ion-select name="nature_dommage_tier" [ngModel]="savedSinistre ? savedSinistre.nature_dommage_tier : ''" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel required>
+                <ion-select-option value="materiel" translate>material</ion-select-option>
+                <ion-select-option value="corporel" translate>physical</ion-select-option>
+                <ion-select-option value="materiel et corporel" translate>material_physical</ion-select-option>
+              </ion-select>
+          </ion-item>
+
+          <ion-item color="none">
+            <ion-label color="primary"  position="stacked">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>sinistre_details</span></ion-label>
+            <ion-textarea rows="6" cols="20" name="description" [ngModel]="savedSinistre ? savedSinistre.description : ''" placeholder="Ecrivez ici..." ngModel required></ion-textarea>
+          </ion-item>
+
+          
+            <ion-radio-group allow-empty-selection="true" name="has_constat" [ngModel]="savedSinistre ? savedSinistre.has_constat : ''" ngModel required>
+              <ion-list-header>
+                <ion-label>
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span translate>constat_question</span>
+                </ion-label>
+              </ion-list-header>
+
+              <ion-item>
+                <ion-label color="primary" translate>yes_answer</ion-label>
+                <ion-radio value="true"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label color="primary" translate>no_answer</ion-label>
+                <ion-radio value="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          
+
+          <!-- <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-icon name="document-attach-outline"></ion-icon>
+                <small>Constat de police</small>
+              </ion-col>
+              <ion-col>
+                <ion-icon name="document-attach-outline"></ion-icon>
+                <small>Constat de gendarmerie</small>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-icon name="document-attach-outline"></ion-icon>
+                <small>Constat d'huissier</small>
+              </ion-col>
+              <ion-col>
+                <ion-icon name="document-attach-outline"></ion-icon>
+                <small>Constat à l'amiable</small>
+              </ion-col>
+            </ion-row>
+          </ion-grid> -->
+
+          
+            <ion-radio-group allow-empty-selection="true" name="has_plainte" [ngModel]="savedSinistre ? savedSinistre.has_plainte : ''" ngModel required>
+              <ion-list-header>
+                <ion-label>
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span translate>plainte_question</span>
+                </ion-label>
+              </ion-list-header>
+
+              <ion-item>
+                <ion-label color="primary" translate>yes_answer</ion-label>
+                <ion-radio value="true"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label color="primary" translate>no_answer</ion-label>
+                <ion-radio value="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          
+
+          <!-- <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-icon name="document-attach-outline"></ion-icon>
+                <small>Copie de la plainte</small>
+              </ion-col>
+            </ion-row>
+          </ion-grid> -->
+
+          
+            <ion-radio-group allow-empty-selection="true" name="has_pompier" [ngModel]="savedSinistre ? savedSinistre.has_pompier : ''" ngModel required>
+              <ion-list-header>
+                <ion-label>
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span translate>pompier_question</span>
+                </ion-label>
+              </ion-list-header>
+
+              <ion-item>
+                <ion-label color="primary" translate>yes_answer</ion-label>
+                <ion-radio value="true"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label color="primary" translate>no_answer</ion-label>
+                <ion-radio value="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          
+
+          <!-- <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-icon name="document-attach-outline"></ion-icon>
+                <small>Rapport d'intervention de pompiers</small>
+              </ion-col>
+            </ion-row>
+          </ion-grid> -->
+
+          
+
+      </ion-list>
+
+      <div [class.hide]="contentTitle!=='fichiers'">
+
+        <ion-item-divider color="primary">
+          <ion-label translate>
+            image_file_intro 
+          </ion-label>
+        </ion-item-divider>
+
+        <ion-grid>
+          <ion-row>
+            <ion-col (click)="chooseImage()">
+              <ion-icon name="images-outline"></ion-icon>
+              <small translate>add_photos</small>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="myImages">
+            <ion-col *ngFor="let file of myImages">
+              <ion-img [src]="file.path"></ion-img>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+  
+        <ion-item-divider color="primary">
+          <ion-label translate>
+            video_question
+          </ion-label>
+        </ion-item-divider>
+        <ion-grid>
+          <ion-row>
+            <ion-col (click)="chooseVideo()">
+              <ion-icon name="videocam-outline"></ion-icon>
+              <small translate>add_videos</small>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="myVideo">
+            <ion-col *ngFor="let file of myVideo">
+              <video #videoTag style="width: 100%; height: 100%;" [autoplay]="true"> 
+                <source [src]="file.path" type="video/mp4"> 
+              </video> 
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+  
+        <ion-item-divider color="primary">
+          <ion-label translate>
+            add_documents
+          </ion-label>
+        </ion-item-divider>
+        <p><small translate>documents_intro</small></p>
+        
+        <ion-grid>
+          <ion-row>
+            <ion-col (click)="chooseFile()">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small translate>max_docs</small>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="myFiles">
+            <ion-col *ngFor="let file of myFiles" (click)="showMe(file.uri)">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small>{{file.file_name}}</small>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button expand="block" color="primary" type="submit" [disabled]="formNonVie.invalid" translate>submit</ion-button>
+        <ion-button expand="block" color="activgreen" (click)="saveSinistre(formNonVie, contract)" translate>save_label</ion-button>
+
+      </div>
+      
+
+    </form>
+  </div>
+
+</ion-content>

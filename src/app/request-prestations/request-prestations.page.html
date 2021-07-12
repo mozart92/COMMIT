@@ -1,0 +1,169 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>presta_request</ion-title>
+    <ion-buttons slot="end" *ngIf="contract">
+      <ion-button fill="clear" color="light" [routerLink]="['/contract-menu/' + contract.contract_infos.num_contrat]">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar *ngIf="contract">
+    <div class="quicklinks">
+      <div>
+        <ion-button fill="clear" color="light">
+          <span *ngIf="translateService.currentLang === 'fr'">{{contract.contract_infos.type_contrat.designation}}</span>
+          <span *ngIf="translateService.currentLang === 'en'">{{contract.contract_infos.type_contrat.designation_en}}</span>
+            <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]" slot="end"></ion-icon>
+        </ion-button>
+        <small color="light">Contrat numéro: {{contract.contract_infos.num_contrat}}</small>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p translate>presta_intro</p>
+  
+  <div *ngIf="contract">
+    <form #form="ngForm" (ngSubmit)="askPrestation(form)">
+      <ion-segment (ionChange)="segmentChanged($event)" value="champs">
+        <ion-segment-button value="champs" color="primary">
+          <ion-label >Informations</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="fichiers" color="light">
+          <ion-label translate>files</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      <ion-list lines="none" [class.hide]="contentTitle!=='champs'" >
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span translate>type_presta</span> </ion-label>
+              <ion-select name="type_prestation" value="brown" okText="J'ai fini" cancelText="Fermer" (ionChange)="setTypeTrans($event)" ngModel >
+                <ion-select-option value="Avance" translate>advance</ion-select-option>
+                <ion-select-option value="Rachat Partiel" translate>partial_buy</ion-select-option>
+                <ion-select-option value="Rachat Total" translate>total_buy</ion-select-option>
+                <ion-select-option value="Contrat à terme" translate>end_contract</ion-select-option>
+              </ion-select>
+          </ion-item>
+
+          <!-- <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              Nom(s)</ion-label>
+            <ion-input type="text" name="nom" ngModel ></ion-input>
+          </ion-item>
+
+          <ion-item color="none">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              Prénom(s)</ion-label>
+            <ion-input type="text" name="prenom" ngModel ></ion-input>
+          </ion-item>
+
+          <ion-item color="none" >
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              Téléphone</ion-label>
+            <ion-input type="tel" name="phone" ngModel ></ion-input>
+          </ion-item> -->
+
+          <ion-item color="none" *ngIf="typePrest && typePrest === 'Contrat à terme'">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span translate>benef</span></ion-label>
+              <ion-select name="beneficiaire" multiple value="brown" okText="J'ai fini" cancelText="Fermer" ngModel >
+                <ion-select-option *ngFor="let assure of contract.contract_infos.beneficiaires" value="{{assure.id}}">{{assure.nom}} {{assure.prenom}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+
+          <ion-item color="none" *ngIf="typePrest && (typePrest === 'Avance' || typePrest === 'Rachat Partiel')">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>amount</span> {{typePrest}}</ion-label>
+            <ion-input type="number" min="100" name="montant" ngModel ></ion-input>
+          </ion-item>
+
+          <ion-item color="none" *ngIf="typePrest && typePrest === 'Avance'">
+            <ion-label color="primary" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>payback_delay</span></ion-label>
+              <ion-select name="delai" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel >
+                <ion-select-option *ngFor="let month of months" value="{{month}}">{{month}} <span translate>month</span> </ion-select-option>
+              </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" color="none" *ngIf="typePrest && typePrest === 'Rachat Total'">
+            <ion-label color="dark"  position="stacked">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>buy_reason</span></ion-label>
+            <ion-textarea rows="6" cols="20" name="motif_rachat" placeholder="Ecrivez ici..." ngModel></ion-textarea>
+          </ion-item>
+
+          <ion-item lines="none" color="none" *ngIf="typePrest && typePrest === 'Avance'">
+            <ion-label color="dark" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span translate>payback_mean</span></ion-label>
+              <ion-select name="mode_remboursement" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel >
+                <ion-select-option value="Espèces" translate>raw_check</ion-select-option>
+                <ion-select-option value="Chèque de Microfinance" translate>micro_cheq</ion-select-option>
+                <ion-select-option value="Chèque de Banque" translate>bank_cheq</ion-select-option>
+                <ion-select-option value="Virement" translate>transfer</ion-select-option>
+              </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" color="none" >
+            <ion-label color="dark" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span translate>payment_mean_offer</span></ion-label>
+              <ion-select name="mode_paiement" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel >
+                <ion-select-option value="Chèque de Microfinance"><p translate>micro_cheq</p></ion-select-option>
+                <ion-select-option value="Chèque de Banque"><p translate>bank_cheq</p></ion-select-option>
+                <ion-select-option value="Virement"><p translate>transfer</p></ion-select-option>
+                <ion-select-option *ngIf="typePrest && (typePrest === 'terme_contrat' || typePrest === 'Rachat Total')" value="Compensation"><p translate>compesate</p></ion-select-option>
+              </ion-select>
+          </ion-item>
+
+      </ion-list>
+      <div [class.hide]="contentTitle!=='fichiers'">
+        <ion-item-divider color="primary">
+          <ion-label translate>
+            prest_doc_intro
+          </ion-label>
+        </ion-item-divider>
+  
+        <ion-grid>
+          <ion-row>
+            <ion-col *ngIf="typePrest && (typePrest === 'Avance' || typePrest === 'Rachat Partiel')" (click)="chooseFile(false)">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small translate>add_cni</small>
+            </ion-col>
+            <ion-col *ngIf="typePrest && typePrest === 'Rachat Total'" (click)="chooseFile(true)">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small translate>add_cni_contract</small>
+            </ion-col>
+            <ion-col *ngIf="typePrest && typePrest === 'Contrat à terme'" (click)="chooseFile(true)">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small translate>add_contract_cert</small>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="myFiles">
+            <ion-col *ngFor="let file of myFiles">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small>{{file.file_name}}</small>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button expand="block" color="primary" type="submit" [disabled]="form.invalid" translate>submit</ion-button>
+      </div>
+      
+
+    </form>
+  </div>
+
+
+</ion-content>

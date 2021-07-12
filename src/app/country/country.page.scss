@@ -1,0 +1,29 @@
+ion-content {
+    // --background: linear-gradient(45deg, rgba(2, 0, 36, 0.9) 0%, rgba(9, 9, 121, .9) 35%, rgba(0, 212, 255, 0.97) 100%) ,url(../../assets/pattern.jpg) !important;
+    //   --background-position: center !important;
+    //   --background-repeat: no-repeat !important;
+    //   --background-size: cover !important;
+      text-align: center;
+      h3 {
+        color: black !important;
+      }
+}
+
+ion-list {
+    width: 70%;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background: none;
+    ion-item{
+        --background: rgba(255,255,255,.4);
+        --border-radius: 20px;
+    }
+    ion-label {
+        font-size: 19px;
+        font-weight: 500;
+        color: black;
+    }
+}

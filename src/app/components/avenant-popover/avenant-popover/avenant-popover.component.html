@@ -1,0 +1,118 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Que voulez vous modifier?</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list>
+    <ion-item>
+      <p>Mon option tarifaire</p>
+      <ion-checkbox slot="start" value='opt_tarif' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <p>Mes garanties</p>
+      <ion-checkbox slot="start" value='garanties' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <p>Le montant de ma prime</p>
+      <ion-checkbox slot="start" value='prime' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <p>Mon nom</p>
+      <ion-checkbox slot="start" value='nom' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <p>Mon prenom</p>
+      <ion-checkbox slot="start" value='prenom' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <p>Mon adresse</p>
+      <ion-checkbox slot="start" value='adresse' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <p>Mon numéro de téléphone</p>
+      <ion-checkbox slot="start" value='phone' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <div *ngIf="contract.type === 'vie' || contract.contract_infos.type_contrat.for_bien !== 1">
+      <ion-item>
+        <p>Ajouter un(e) assuré(e)</p>
+        <ion-checkbox slot="start" value='add_person' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+  
+      <ion-item>
+        <p>Retirer un(e) assuré(e)</p>
+        <ion-checkbox slot="start" value='remov_person' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+
+      <ion-item>
+        <p>Ajouter un(e) bénéficiaire</p>
+        <ion-checkbox slot="start" value='add_benef' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+  
+      <ion-item>
+        <p>Retirer un(e) bénéficiaire</p>
+        <ion-checkbox slot="start" value='remov_benef' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+  
+      <ion-item>
+        <p>Le nom de mon bénéficiaire</p>
+        <ion-checkbox slot="start" value='nom-benef' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+  
+      <ion-item>
+        <p>Le prénom de mon bénéficiaire</p>
+        <ion-checkbox slot="start" value='prenom-benef' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+  
+      <ion-item>
+        <p>La date de naissance de mon bénéficiaire</p>
+        <ion-checkbox slot="start" value='date-naiss-benef' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+  
+      <ion-item>
+        <p>Le téléphone de mon bénéficiaire</p>
+        <ion-checkbox slot="start" value='phone-benef' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+    </div>
+
+    <div *ngIf="contract.type === 'non_vie' && contract.contract_infos.type_contrat.for_bien === 1">
+      <ion-item>
+        <p>Ajouter un bien assuré</p>
+        <ion-checkbox slot="start" value='add_bien' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+  
+      <ion-item>
+        <p>Retirer un bien assuré</p>
+        <ion-checkbox slot="start" value='remov_bien' (ionChange)="checkboxChange($event)"></ion-checkbox>
+      </ion-item>
+    </div>
+
+    <ion-item>
+      <p>La durée de mon contrat</p>
+      <ion-checkbox slot="start" value='duree-contrat' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <p>Mon moyen de paiement</p>
+      <ion-checkbox slot="start" value='moyen-paiement' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <p>Ma périodicité de paiement</p>
+      <ion-checkbox slot="start" value='periode-paiement' (ionChange)="checkboxChange($event)"></ion-checkbox>
+    </ion-item>
+
+  </ion-list>
+  
+  <ion-button expand="block" color="primary" type="submit" [disabled]="choices.length===0" (click)="closePopover()">J'ai choisi</ion-button>
+  <ion-button expand="block" color="danger" (click)="leavePopover()">Annuler</ion-button>
+</ion-content>

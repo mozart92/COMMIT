@@ -1,0 +1,94 @@
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-content>
+        <ion-list id="inbox-list">
+          <div class="header-div">
+            <ion-item lines="none">
+              <ion-avatar slot="start">
+                <img src="../assets/User_Avatar_2.png">
+              </ion-avatar>
+              <ion-label color="light">{{user_datas}}</ion-label>
+            </ion-item>
+            <ion-note></ion-note>
+          </div>
+
+          <ion-menu-toggle auto-hide="true" *ngIf="user_status===true">
+            <ion-item [routerLink]="['/change-password']" lines="none" detail="false">
+              <ion-icon slot="start" ios="bookmark-outline" md="person-outline" color="primary"></ion-icon>
+              <ion-label translate>my_space</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/dashboard']" lines="none" detail="false">
+              <ion-icon slot="start" ios="bookmark-outline" md="home-outline" color="primary"></ion-icon>
+              <ion-label translate>Dashboard</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/all-sinistres']" lines="none" detail="false">
+              <ion-icon slot="start" ios="bookmark-outline" md="flash-off-outline" color="primary"></ion-icon>
+              <ion-label translate>user_claims</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/all-prestations']" lines="none" detail="false">
+              <ion-icon slot="start" ios="bookmark-outline" md="cash-outline" color="primary"></ion-icon>
+              <ion-label translate>my_benef</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/all-devis']" lines="none" detail="false">
+              <ion-icon slot="start" ios="cash-outline" md="cash-outline" color="primary"></ion-icon>
+              <ion-label translate>devis_story</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/prestataire-map']" lines="none" detail="false">
+              <ion-icon slot="start" ios="map-outline" md="map-outline" color="primary"></ion-icon>
+              <ion-label translate>activa_presta</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/pos-map']" lines="none" detail="false">
+              <ion-icon slot="start" ios="map-outline" md="map-outline" color="primary"></ion-icon>
+              <ion-label translate>activa_pos</ion-label>
+            </ion-item>
+            <ion-item (click)="disconnect()" lines="none" detail="false">
+              <ion-icon slot="start" ios="exit-outline" md="exit-outline" color="primary"></ion-icon>
+              <ion-label translate>log_out</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+        </ion-list>
+
+        <ion-list id="labels-list">
+          <ion-menu-toggle auto-hide="true">
+            <ion-item [routerLink]="['/home']" lines="none">
+              <ion-icon slot="start" ios="reader-outline" md="home-outline" color="primary"></ion-icon>
+              <ion-label translate>home</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/product-devis']" lines="none">
+              <ion-icon slot="start" ios="reader-outline" md="cash-outline" color="primary"></ion-icon>
+              <ion-label translate>devis_request</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/all-produits']" lines="none">
+              <ion-icon slot="start" ios="reader-outline" md="cart-outline" color="primary"></ion-icon>
+              <ion-label translate>products</ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/actualite']" lines="none">
+              <ion-icon slot="start" ios="reader-outline" md="newspaper-outline" color="primary"></ion-icon>
+              <ion-label translate>news</ion-label>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-icon slot="start" ios="call-outline" md="call-outline" color="primary"></ion-icon>
+              <ion-label translate>contact</ion-label>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-icon slot="start" ios="document-lock-outline" md="bookmark-outline" color="primary"></ion-icon>
+              <ion-label translate>confidential</ion-label>
+            </ion-item>
+            <ion-item lines="none" *ngIf="language==='fr'" (click)="switch_language()">
+              <ion-icon slot="start" ios="globe-outline" md="globe-outline" color="primary"></ion-icon>
+              <ion-label>English</ion-label>
+            </ion-item>
+            <ion-item lines="none" *ngIf="language==='en'" (click)="switch_language()">
+              <ion-icon slot="start" ios="globe-outline" md="globe-outline" color="primary"></ion-icon>
+              <ion-label>Francais</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

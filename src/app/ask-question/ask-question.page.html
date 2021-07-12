@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>ask_question</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" [routerLink]="['/inbox']">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content>
+  
+
+  <div class="contenu">
+
+  <p translate>question_intro</p>
+
+  <form #form="ngForm" (ngSubmit)="askPrestation(form)">
+    <ion-list lines="none" *ngIf="themes" >
+        <ion-item color="none">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>theme_label</span> </ion-label>
+            <ion-select name="theme" value="brown" okText="J'ai fini" cancelText="Fermer" (ionChange)="setSubTheme($event)" ngModel required>
+              <ion-select-option *ngFor="let theme of themes" value="{{theme.id}}">{{theme.designation}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item color="none">
+          <ion-label color="primary" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>sumtheme_label</span> </ion-label>
+            <ion-select name="sub_theme" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel (ionChange)="getTheme($event)" required>
+              <ion-select-option *ngFor="let theme of sub_themes" value="{{theme.id}}">{{theme.designation}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item color="none" *ngIf="sub_theme && sub_theme.message_auto" [innerHTML]="sub_theme.message_auto">
+
+        </ion-item>
+
+        <ion-item lines="none" color="none" *ngIf="sub_theme && !sub_theme.message_auto" required>
+          <ion-label color="primary"  position="stacked">
+            <ion-icon name="person-outline"></ion-icon>
+            Question</ion-label>
+          <ion-textarea rows="6" cols="20" name="message" placeholder="Ecrivez ici..." ngModel></ion-textarea>
+        </ion-item>
+
+        <ion-item-divider color="primary" *ngIf="sub_theme && !sub_theme.message_auto">
+          <ion-label translate>
+            add_docs
+          </ion-label>
+        </ion-item-divider>
+
+        <ion-grid *ngIf="sub_theme && !sub_theme.message_auto">
+          <ion-row>
+            <ion-col (click)="chooseFile()" >
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small translate>max_docs</small>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="myFiles">
+            <ion-col *ngFor="let file of myFiles" (click)="showMe(file.uri)">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <small>{{file.file_name}}</small>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+    </ion-list>
+    
+    <ion-button *ngIf="sub_theme && !sub_theme.message_auto" expand="block" color="primary" type="submit" [disabled]="form.invalid" translate>submit</ion-button>
+    
+
+  </form>
+
+
+</div>
+
+</ion-content>

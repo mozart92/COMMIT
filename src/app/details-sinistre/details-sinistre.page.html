@@ -1,0 +1,260 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>sinistre_title</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/dashboard"> 
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <div *ngIf="sinistre && sinistre.contrat_vie_id" class="steps">
+      <div class="step-1">
+        <div [class.active]="activateMeVie('Déclaré')">
+          <span translate>declared_status<br></span>
+        </div>
+      </div>
+      <div class="step-2">
+        <div [class.active]="activateMeVie('En cours')">
+          <span translate>encour_status</span>
+        </div>
+      </div>
+      <div class="step-3">
+        <div [class.active]="activateMeVie('Validé')">
+          <span translate>valid_status</span>
+        </div>
+      </div>
+      <div class="step-4">
+        <div [class.active]="activateMeVie('Paiement disponible')">
+          <span><span translate>paiement</span> <br> <span translate>avail_status</span></span>
+        </div>
+      </div>
+      <div class="step-4">
+        <div [class.active]="activateMeVie('Clôturé')">
+          <span translate>closed_status</span>
+        </div>
+      </div>
+  </div>
+
+  <div *ngIf="sinistre && sinistre.contrat_non_vie_id" class="steps-nv">
+    <div class="step-1">
+      <div [class.active]="activateMeNonVie('Déclaré')">
+        <span translate>declared_status<br></span>
+      </div>
+    </div>
+    <div class="step-2">
+      <div [class.active]="activateMeNonVie('Pieces complémentaires attendues')">
+      <span><span translate>pieces</span><br> <span translate>comple</span><br> <span translate>waited_status</span></span>
+      </div>
+    </div>
+    <div class="step-3">
+      <div [class.active]="activateMeNonVie('Expert mandaté')">
+        <span translate>expert_status</span>
+      </div>
+    </div>
+    <div class="step-4">
+      <div [class.active]="activateMeNonVie('Bon de prise en charge délivré')">
+      <span><span translate>bon_status</span><br> <span translate>bon_suite_status</span></span>
+      </div>
+    </div>
+    <div class="step-4">
+      <div [class.active]="activateMeNonVie('Offre disponible')">
+        <span translate>offer_status</span>
+      </div>
+    </div>
+</div>
+
+  <!-- <p *ngIf="sinistre && sinistre.statut === 'Offre disponible'"> Vous avez recu une offre pour votre sinitre, veuillez appuyer sur 'modifier ce sinistre' afin de l'accepter ou de la rejetter</p> -->
+
+  <ion-list *ngIf="sinistre">
+
+    <div class="infos-bien" *ngIf="sinistre.statut === 'Offre disponible'">
+      <h5 translate>offer_ins</h5>
+      <p>{{sinistre.message_offre}}</p>
+      <form #form="ngForm" (ngSubmit)="respondOffer(form)">
+
+        <ion-radio-group allow-empty-selection="false" name="respond" (ionChange)="chooseAnswer($event)" ngModel>
+          <ion-list-header>
+            <ion-label color="dark">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>accept_offer</span>
+            </ion-label>
+          </ion-list-header>
+
+          <ion-item lines="none" color="none">
+            <ion-label color="dark" translate>yes_answer</ion-label>
+            <ion-radio value="Offre acceptée"></ion-radio>
+          </ion-item>
+          <ion-item lines="none" color="none">
+            <ion-label color="dark" translate>no_answer</ion-label>
+            <ion-radio value="Offre refusée"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+
+        <ion-item lines="none" color="none" *ngIf="offer === 'Offre acceptée'">
+          <ion-label color="dark" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span translate>payment_mean_offer</span></ion-label>
+            <ion-select name="moyen_paiement" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel >
+              <ion-select-option value="Chèque de Microfinance" translate>micro_cheq</ion-select-option>
+              <ion-select-option value="Chèque de Banque" translate>bank_cheq</ion-select-option>
+              <ion-select-option value="Virement" translate>transfer</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item lines="none" color="none" *ngIf="offer === 'Offre refusée'">
+          <ion-label color="dark"  position="stacked">
+            <ion-icon name="person-outline"></ion-icon>
+            <span translate>refus_label</span></ion-label>
+          <ion-textarea rows="6" cols="20" name="motif_refus" placeholder="Ecrivez ici..." ngModel></ion-textarea>
+        </ion-item>
+        
+        <ion-button expand="block" color="success" type="submit" [disabled]="!offer" translate>answer</ion-button>
+      </form>
+    </div>
+
+    <ion-item *ngIf="sinistre.statut">
+      <ion-label translate>sinis_status</ion-label>
+      <ion-badge slot="end" *ngIf="sinistre.statut !== 'Clôturé'" color="secondary">{{sinistre.statut}}</ion-badge>
+      <ion-badge *ngIf="sinistre.statut === 'Clôturé'" slot="end" color="danger">{{sinistre.statut}}</ion-badge>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.biensassures">
+      <ion-label translate>sinistre_bien</ion-label>
+      <ion-note slot="end">{{sinistre.biensassures.designation}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.assures">
+      <ion-label translate>assur_sinis</ion-label>
+      <ion-note slot="end">{{sinistre.assures.nom}} {{sinistre.assures.prenom}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.date_sinistre">
+      <ion-label translate>surv_date</ion-label>
+      <ion-note slot="end">{{sinistre.date_sinistre}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.lieu">
+      <ion-label translate>surv_place</ion-label>
+      <ion-note slot="end">{{sinistre.lieu}}</ion-note>
+    </ion-item>
+    
+    <ion-item *ngIf="sinistre.nature_dommage">
+      <ion-label translate>dommag_nature</ion-label>
+      <ion-note slot="end">{{sinistre.nature_dommage}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.nature_dommage_tier">
+      <ion-label translate>dommag_tier_nature</ion-label>
+      <ion-note slot="end">{{sinistre.nature_dommage_tier}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.has_constat">
+      <ion-label translate>constat_done</ion-label>
+      <ion-note *ngIf="sinistre.has_constat === 1" slot="end" translate>yes_answer</ion-note>
+      <ion-note *ngIf="sinistre.has_constat === 0" slot="end" translate> yes_answer</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.has_intervention_pompier">
+      <ion-label translate>pompier_came</ion-label>
+      <ion-note *ngIf="sinistre.has_intervention_pompier === 1" slot="end" translate>yes_answer</ion-note>
+      <ion-note *ngIf="sinistre.has_intervention_pompier === 0" slot="end" translate>no_answer</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.has_plainte">
+      <ion-label translate>plainte_depos</ion-label>
+      <ion-note *ngIf="sinistre.has_plainte === 1" slot="end" translate>yes_answer </ion-note>
+      <ion-note *ngIf="sinistre.has_plainte === 0" slot="end" translate>no_answer</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.nom_conducteur">
+      <ion-label translate>driver_rec_name </ion-label>
+      <ion-note slot="end">{{sinistre.nom_conducteur}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.prenom_conducteur">
+      <ion-label translate>driver_rec_name</ion-label>
+      <ion-note slot="end">{{sinistre.prenom_conducteur}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.has_permis_conduire">
+      <ion-label translate>driver_rec_has_permis </ion-label>
+      <ion-note *ngIf="sinistre.has_permis_conduire === 1" slot="end" translate>yes_answer</ion-note>
+      <ion-note *ngIf="sinistre.has_permis_conduire === 0" slot="end" translate>no_answer</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.num_permis_conduire">
+      <ion-label translate>permis_number </ion-label>
+      <ion-note slot="end">{{sinistre.num_permis_conduire}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.validite_permis">
+      <ion-label translate>validity_date </ion-label>
+      <ion-note slot="end">{{sinistre.validite_permis  | date: 'dd/MM/yyyy  HH:MM'}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="sinistre.created_at">
+      <ion-label translate>declar_date </ion-label>
+      <ion-note slot="end">{{sinistre.created_at  | date: 'dd/MM/yyyy  HH:MM'}}</ion-note>
+    </ion-item>
+
+    <div class="descript">
+      <ion-label>Description</ion-label>
+      <p> <small> {{sinistre.description_evenement}}</small></p>
+    </div>
+
+
+    <ion-item-divider *ngIf="sinistre.documents.length > 0" color="primary">
+      <ion-label translate>
+        sinis_docs
+      </ion-label>
+    </ion-item-divider>
+
+    <ion-grid *ngIf="sinistre.documents">
+      <ion-row *ngIf="sinisterFiles.images.length > 0">
+        <ion-col *ngFor="let image of sinisterFiles.images" size="3">
+          <ion-img [src]="serverurl + image.chemin_acces"></ion-img>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="sinisterFiles.video">
+        <ion-col >
+          <video #videoTag style="width: 100%; height: 100%;" [autoplay]="true" controls="true"> 
+            <source [src]="serverurl + sinisterFiles.video.chemin_acces" type="video/mp4"> 
+          </video> 
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="sinisterFiles.docs.length > 0"  size="3">
+        <ion-col *ngFor="let doc of sinisterFiles.docs" (click)="showMe(serverurl + doc.chemin_acces)">
+          <ion-icon name="eye-outline"></ion-icon>
+          <small translate>doc_lablel</small>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+
+    <ion-item lines="none">
+      <ion-label></ion-label>
+      <ion-note slot="end"></ion-note>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label></ion-label>
+      <ion-note slot="end"></ion-note>
+    </ion-item>
+  </ion-list>
+  
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="sinistre && (sinistre.statut === 'Déclaré' || sinistre.statut === 'En cours')">
+    <ion-fab-button size="small" color="success" [routerLink]="['/update-sinistre/' + sinistre.id + '/' + contractId]">
+      <ion-icon slot="start" name="flash-off-outline"></ion-icon>
+      <span translate>update_sinis</span> 
+    </ion-fab-button>
+  </ion-fab>
+
+
+</ion-content>

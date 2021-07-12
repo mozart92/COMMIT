@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>prime_history</ion-title>
+    <ion-buttons slot="end" *ngIf='contract'>
+      <ion-button fill="clear" color="light" [routerLink]="['/contract-menu/' + contract.contract_infos.num_contrat]">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar *ngIf="contract">
+    <div class="quicklinks">
+      <div>
+        <ion-button fill="clear" color="light">
+          <span *ngIf="translateService.currentLang === 'fr'">{{contract.contract_infos.type_contrat.designation}}</span>
+          <span *ngIf="translateService.currentLang === 'en'">{{contract.contract_infos.type_contrat.designation_en}}</span>
+            <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]" slot="end"></ion-icon>
+        </ion-button>
+        <span color="light">Contrat numéro: {{contract.contract_infos.num_contrat}}</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div *ngIf="history">
+    <ion-card class="border-blue" *ngFor="let story of history">
+      <ion-card-content>
+        <ion-item class="ion-activated" lines="none">
+          <ion-icon name="flash-off-outline" color="primary" slot="start"></ion-icon>
+          <div class="contract-infos">
+            <ion-label color="dark">{{story.montant}}{{story.devise}}</ion-label>
+            <ion-label color="dark"> <small> Date: {{story.created_at   | date: 'dd/MM/yyyy  HH:MM'}}</small></ion-label>
+          </div>
+          <ion-icon name="arrow-forward-outline" color="primary" slot="end"></ion-icon>
+        </ion-item>
+      </ion-card-content>
+      <ion-card-header color="primary">
+        <ion-icon name="hourglass-outline" color="danger" slot="start"></ion-icon>
+        {{story.statut}}
+      </ion-card-header>
+    </ion-card>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="contract && contract.contract_infos.statut==='En cours'">
+    <ion-fab-button size="small" color="success" (click)="payPrime(contract.contract_infos.num_contrat)">
+      <ion-icon slot="start" name="flash-off-outline"></ion-icon>
+      <span translate>request_renewal</span>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

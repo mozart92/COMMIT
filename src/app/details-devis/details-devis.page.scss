@@ -1,0 +1,139 @@
+ion-header {
+    
+    background: linear-gradient(45deg, rgba(2, 0, 36, 0.9) 0%, rgba(9, 9, 121, .9) 35%, rgba(0, 212, 255, 0.97) 100%) ,url(../../assets/pattern.jpg) !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+ion-toolbar {
+  --background: none;
+  --padding-bottom: 0.5em;
+}
+
+ion-fab-button {
+    --border-radius: 10px;
+    width: 200px;
+    height: 50px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+ion-item-divider{
+    margin: 50px 0 10px 0;
+    border-radius: 10px 0 10px 0;
+    ion-label {
+        font-weight: bold;
+    }
+    
+}
+
+ion-grid {
+    width: 100%;
+    height: 30%;
+    ion-col {
+        text-align: right;
+        font-weight: bold;
+        color: var(--ion-color-primary);
+        background-color: var(--ion-color-light);
+        border: 1px solid var(--ion-color-primary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin: 10px;
+        width: 50%;
+        border-radius: 10px;
+    }
+}
+
+
+
+ion-list-header {
+    color:  var(--ion-color-primary);
+    text-align: left;
+}
+
+// ion-img {
+//     width: 100%;
+//     height: 30%;
+// }
+
+.infos-bien {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid var(--ion-color-success-tint);
+    background-color: var(--ion-color-light);
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    color: var(--ion-color-dark);
+}
+
+.steps {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 10px;
+    height: 2px;
+    background-color: var(--ion-color-activblue);
+    z-index: -1;
+    div {
+        display: flex;
+        align-items: center;
+        width: 90%;
+        > div {
+            border: 2px solid var(--ion-color-activblue);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 5px;
+            background-color: white;
+            color: var(--ion-color-activblue);
+            font-size: 12px;
+            height: 50px;
+        }
+    }
+
+
+}
+
+.steps-nv {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 10px;
+    height: 2px;
+    background-color: var(--ion-color-activblue);
+    z-index: -1;
+    div {
+        display: flex;
+        align-items: center;
+        width: 90%;
+        > div {
+            border: 2px solid var(--ion-color-activblue);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 5px;
+            background-color: white;
+            color: var(--ion-color-activblue);
+            font-size: 10px;
+            height: 60px;
+        }
+    }
+
+
+}
+
+.active {
+    background-color: var(--ion-color-activblue) !important;
+    color: white !important;
+}
+
+.descript {
+    padding: 10px;
+}

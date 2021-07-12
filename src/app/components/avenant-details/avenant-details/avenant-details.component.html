@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Détails de l'avenant</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list>
+    
+    <ion-item *ngIf="avenant.nom">
+      <p>Nom</p>
+      <ion-note slot="end">{{avenant.nom}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.prenom">
+      <p>Prénom</p>
+      <ion-note slot="end">{{avenant.prenom}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.garanties">
+      <p>Garanties</p>
+      <ion-note slot="end">{{avenant.garanties}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.adresse">
+      <p>Adresse</p>
+      <ion-note slot="end">{{avenant.adresse}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.date_naissance">
+      <p>Date de naissance</p>
+      <ion-note slot="end">{{avenant.date_naissance}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.duree_contrat">
+      <p>Durée du contrat</p>
+      <ion-note slot="end">{{avenant.duree_contrat}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.mnt_prime">
+      <p>Prime</p>
+      <ion-note slot="end">{{avenant.mnt_prime}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.mode_paiement">
+      <p>Mode de paiement</p>
+      <ion-note slot="end">{{avenant.mode_paiement}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.periodicite">
+      <p>Périodicité</p>
+      <ion-note slot="end">{{avenant.periodicite}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.telephone">
+      <p>Téléphone</p>
+      <ion-note slot="end">{{avenant.telephone}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.beneficiaire">
+      <p>Infos bénéficiaires</p>
+      <ion-note slot="end">{{avenant.beneficiaire}}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="avenant.details">
+      <p>Details</p><br>
+      <ion-note slot="end">{{avenant.details}}</ion-note>
+    </ion-item>
+
+  </ion-list>
+  
+  <ion-button expand="block" color="primary" (click)="closePopover()">Fermer</ion-button>
+</ion-content>

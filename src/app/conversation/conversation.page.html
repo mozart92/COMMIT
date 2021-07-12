@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title *ngIf="conv" color="light">{{conv.conversation.sujet}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" [routerLink]="['/inbox']">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content [scrollEvents]="true">
+  <ion-grid *ngIf="conv && userId">
+    <div *ngFor="let message of conv.conversation.messages">
+      <ion-row *ngIf="message.receiver_id === userId">
+        <ion-col size="10" class="sender-col ion-align-self-start radius-left">
+          <p [innerHTML]="message.body"></p>
+          <small color="primary">{{message.created_at  | date: 'dd/MM/yyyy  HH:MM'}} </small>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="message.receiver_id !== userId" class="push-left">
+        <ion-col size="10" class="reciever-col ion-align-self-end radius-right">
+          <p [innerHTML]="message.body"></p>
+          <small color="primary">{{message.created_at  | date: 'dd/MM/yyyy  HH:MM'}}</small>
+        </ion-col>
+      </ion-row>
+
+    </div>
+  </ion-grid>
+</ion-content>
+ 
+<!-- <ion-footer *ngIf="conv && conv.conversation.sujet !== 'Notifications'" color="primary" class="ion-no-border">
+    <ion-textarea rows="1" placeholder="Enter message here..."></ion-textarea>
+    <ion-button shape="round" color="primary" (click)="ScrollToBottom()">
+      <ion-icon slot="icon-only" name="attach-outline" size="small"></ion-icon>
+    </ion-button>
+    <ion-button shape="round" color="primary">
+      <ion-icon slot="icon-only" name="send-outline" size="small"></ion-icon>
+    </ion-button>
+</ion-footer> -->

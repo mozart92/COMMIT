@@ -1,0 +1,222 @@
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <div class="logo-div">
+      <img src="../../assets/activa-logo.png">
+      <div class="green-bar"></div>
+    </div>
+    
+
+    <form #form="ngForm" (ngSubmit)="register(form)" method="post">
+      <h2 color="activblue" translate><ion-icon name="person"></ion-icon> register_title </h2>
+
+      <div class="facial-box" (click)="addFacialPrint()">
+        <img *ngIf="!facialPrint" src="../../assets/facial-rec.gif">
+        <img *ngIf="facialPrint" src="../../assets/check.gif">
+        <h6 *ngIf="!facialPrint" translate>facial_add</h6>
+        <h6 *ngIf="facialPrint" translate>facial_added</h6>
+      </div>
+
+      <ion-list lines="none">
+
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating" translate>
+            <ion-icon name="create-outline"></ion-icon>
+            contract_num_label </ion-label>
+          <ion-input type="text" color="activblue" name="num_contrat"  ngModel required></ion-input>
+        </ion-item>
+        <div *ngIf="form.form.controls.num_contrat" class="error-block">
+          <div *ngIf="form.form.controls.num_contrat.errors && form.form.controls.num_contrat.touched">
+            <p *ngIf="form.form.controls.num_contrat.errors.required" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              validation_empty
+            </p>
+          </div>
+        </div>
+
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating" translate>
+            <ion-icon name="call-outline"></ion-icon>
+            phone_label</ion-label>
+          <ion-input type="tel" color="activblue" name="phone" ngModel required></ion-input>
+        </ion-item>
+        <div *ngIf="form.form.controls.phone" class="error-block">
+          <div *ngIf="form.form.controls.phone.errors && form.form.controls.phone.touched">
+            <p *ngIf="form.form.controls.phone.errors.required" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              validation_empty
+            </p>
+          </div>
+        </div>
+
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating" translate>
+            <ion-icon name="person-outline"></ion-icon>
+            pseudo_label</ion-label>
+          <ion-input type="text" color="activblue" name="username" minlength='6' maxlength='10' ngModel required></ion-input>
+        </ion-item>
+        <div *ngIf="form.form.controls.username" class="error-block">
+          <div *ngIf="form.form.controls.username.errors && form.form.controls.username.touched">
+            <p *ngIf="form.form.controls.username.errors.required" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              validation_empty
+            </p>
+            <p *ngIf="form.form.controls.username.errors.minlength"> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              Pseudonyme trop court!
+            </p>
+            <p *ngIf="form.form.controls.username.errors.maxlength"> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              Pseudonyme trop long!
+            </p>
+          </div>
+        </div>
+
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating">
+            <ion-icon slot="start" name="at-circle-outline"></ion-icon>
+            Email</ion-label>
+          <ion-input type="email" color="activblue" name="email" ngModel required></ion-input>
+        </ion-item>
+        <div *ngIf="form.form.controls.email" class="error-block">
+          <div *ngIf="form.form.controls.email.errors && form.form.controls.email.touched">
+            <p *ngIf="form.form.controls.email.errors.required" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              validation_empty
+            </p>
+          </div>
+        </div>
+
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating" translate>
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            password_label</ion-label>
+          <ion-input type="password" color="activblue" name="password" minlength='6' maxlength='20' ngModel required></ion-input>
+        </ion-item>
+        <div *ngIf="form.form.controls.password" class="error-block">
+          <div *ngIf="form.form.controls.password.errors && form.form.controls.password.touched">
+            <p *ngIf="form.form.controls.password.errors.required" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              validation_empty
+            </p>
+          </div>
+          
+          <div *ngIf="form.form.controls.password.errors">
+            <p *ngIf="form.form.controls.password.errors.minlength" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              small_pass
+            </p>
+            <p *ngIf="form.form.controls.password.errors.maxlength" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              long_pass
+            </p>
+          </div>
+        </div>
+
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating" translate>
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            repeat_password_label</ion-label>
+          <ion-input type="password" color="activblue" name="password_repeat" ngModel required></ion-input>
+        </ion-item>
+        <div *ngIf="form.form.controls.password_repeat" class="error-block">
+          <div *ngIf="form.form.controls.password_repeat.errors && form.form.controls.password_repeat.touched">
+            <p *ngIf="form.form.controls.password_repeat.errors.required" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              validation_empty
+            </p>
+          </div>
+          <div *ngIf="form.form.controls.password_repeat.value && form.form.controls.password_repeat.touched">
+            <p *ngIf="form.form.controls.password_repeat.value !== form.form.controls.password.value" translate> 
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              pass_repeat_val
+            </p>
+          </div>
+        </div>
+
+      </ion-list>
+
+      <ion-button color="activblue" type="submit" [disabled]="form.invalid && (form.form.value.password_repeat !== form.form.value.password)" translate>activate_button</ion-button>
+      <ion-button size="small" expand="block" color="activblue" fill="clear" class="link"  [routerLink]="['/login']" translate>login_button</ion-button>
+
+    </form>
+
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+    <ion-fab-button [routerLink]="['/country']" color="activblue">
+      <ion-icon name="home-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Activate your account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Activate your account</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+
+    <form #form="ngForm" (ngSubmit)="register(form)" method="post" enctype="multipart/form-data">
+
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Your email</ion-label>
+          <ion-input type="email" name="email" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input type="password" name="password" ngModel required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-button color="primary" (click)="choosePicture()">Add picture</ion-button>
+          <div><ion-img [src]="photo.fileUrl"></ion-img></div>
+        </ion-item>
+
+        <ion-item>
+          <ion-button color="primary" (click)="chooseFile()">Add document</ion-button>
+          <div><small> {{filename}}</small></div>
+        </ion-item>
+
+        <ion-item>
+          <ion-button color="primary" (click)="chooseVideo()">Add video</ion-button>
+          <div> <video src="video.fileUrl"></video> </div>
+        </ion-item>
+      </ion-list>
+
+      <div padding>
+        <ion-button  size="large" type="submit" [disabled]="form.invalid" expand="block">Register</ion-button>
+      </div>
+
+    </form>
+
+  </div>
+</ion-content>
+ -->

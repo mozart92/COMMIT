@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title *ngIf="produit" color="light">{{produit.nom}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/home"> 
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content *ngIf="produit">
+  <!-- <div class="logo-div">
+    <img src="../../assets/activa-logo.png">
+    <div class="green-bar"></div>
+  </div> -->
+
+  <img src="{{serverUrl + produit.image}}">
+
+  <h3>{{produit.nom}}</h3>
+
+  <p [innerHTML]="produit.description"></p>
+ 
+  <div class="devis-button">
+    <ion-button shape="round" color="activblue" [routerLink]="['/devis/' + produit.id]" translate>
+      devis_request
+    </ion-button>
+  </div>
+
+</ion-content>

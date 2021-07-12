@@ -1,0 +1,72 @@
+ion-header {
+    
+    background: linear-gradient(45deg, rgba(2, 0, 36, 0.9) 0%, rgba(9, 9, 121, .9) 35%, rgba(0, 212, 255, 0.97) 100%) ,url(../../assets/pattern.jpg) !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+ion-toolbar {
+  --background: none;
+  --padding-bottom: 0.5em;
+}
+
+.segment-button-checked {
+    font-weight: bolder;
+    font-size: 17px;
+    --indicator-color: var(--ion-color-light);
+    --indicator-height: 3px;
+}
+
+.infos-bien {
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--ion-color-light);
+    border-radius: 5px;
+    margin: 10px;
+    ion-grid {
+        width: 100%;
+        ion-col:first-child {
+            text-align: right;
+            font-weight: bold;
+        }
+    }
+}
+
+.infos-bien div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    font-weight: bold;
+
+    ion-button {
+        margin: 10px 0;
+    }
+}
+
+ion-item-divider ion-label {
+    font-weight: bold;
+}
+
+.infos-versement {
+    background-color: var(--ion-color-light);
+    border-radius: 5px;
+    margin: 10px;
+}
+
+ion-fab-button {
+    --border-radius: 10px;
+    width: 70px;
+    height: 25px;
+    font-weight: bold;
+}
+
+.link {
+    margin-top: 15px;
+    text-decoration: underline;
+}

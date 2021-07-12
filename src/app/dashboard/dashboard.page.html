@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light">Dashboard</ion-title>
+  </ion-toolbar>
+  
+  <ion-toolbar>
+    <div class="quicklinks">
+      <div>
+        <ion-button fill="clear" color="light" size="large" [routerLink]="['/inbox']">
+            <ion-badge *ngIf="unreadMessages && unreadMessages > 0" slot="end" color="danger">{{unreadMessages}}</ion-badge>
+            <ion-icon slot="icon-only" name="mail-outline"></ion-icon>
+        </ion-button>
+        <span color="light" >Messages</span>
+      </div>
+      <div>
+        <ion-button fill="clear" color="light" size="large" [routerLink]="['/all-sinistres']">
+            <ion-icon slot="icon-only" name="flash-off-outline"></ion-icon>
+        </ion-button>
+        <span color="light" translate>sinistres</span>
+      </div>
+      <div>
+        <ion-button fill="clear" color="light" size="large" [routerLink]="['/all-prestations']">
+            <ion-icon slot="icon-only" name="cash-outline"></ion-icon>
+        </ion-button>
+        <span color="light" translate>prestations</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-slides *ngIf="pubs" pager="true" [options]="slideOpts" >
+    <ion-slide *ngFor="let pub of pubs" >
+      <ion-img [src]="pub"></ion-img>
+    </ion-slide>
+  </ion-slides>
+ <h2 translate>contracts</h2>
+  <div *ngIf='contracts'>
+    <ion-card class="border-blue" *ngFor="let contract of contracts.contrat_non_vie">
+      <ion-item [routerLink]="['/contract-menu/' + contract.num_contrat]" class="ion-activated" lines="none">
+        <ion-icon [name]="icones[contract.type_contrat.designation]" color="primary" slot="start"></ion-icon>
+        <div class="contract-infos">
+          <ion-label color="primary">
+            <span *ngIf="translateService.currentLang === 'fr'">{{contract.type_contrat.designation}}</span>
+            <span *ngIf="translateService.currentLang === 'en'">{{contract.type_contrat.designation_en}}</span>
+          </ion-label>
+          <ion-label color="dark">{{contract.num_contrat}}</ion-label>
+          <ion-label color="dark"> <small> <span translate>expires_on</span> {{contract.date_echeance}}</small></ion-label>
+          <ion-label [color]="contract.statut==='En cours' ? 'success' : 'danger'">{{contract.statut}}</ion-label>
+        </div>
+        <ion-icon name="arrow-forward-outline" color="primary" slot="end"></ion-icon>
+      </ion-item>
+    </ion-card>
+
+    
+    <ion-card class="border-blue" *ngFor="let contract of contracts.contrat_vie">
+      <ion-item [routerLink]="['/contract-menu/' + contract.num_contrat]" class="ion-activated" lines="none">
+        <ion-icon [name]="icones[contract.type_contrat.designation]" color="primary" slot="start"></ion-icon>
+        <div class="contract-infos">
+          <ion-label color="primary">
+            <span *ngIf="translateService.currentLang === 'fr'">{{contract.type_contrat.designation}}</span>
+            <span *ngIf="translateService.currentLang === 'en'">{{contract.type_contrat.designation_en}}</span>
+          </ion-label>
+          <ion-label color="dark">{{contract.num_contrat}}</ion-label>
+          <ion-label color="dark"> <small> <span translate>expires_on</span> {{contract.date_echeance}}</small></ion-label>
+          <ion-label [color]="contract.statut==='En cours' ? 'success' : 'danger'">{{contract.statut}}</ion-label>
+        </div>
+        <ion-icon name="arrow-forward-outline" color="primary" slot="end"></ion-icon>
+      </ion-item>
+    </ion-card>
+  </div>
+  
+  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openBot()" color="activgreen">
+      <ion-icon name="happy-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab> -->
+
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="openBot()">
+      <img src="../../assets/bot-icon.png" alt="">
+  </ion-fab>
+
+
+  
+
+</ion-content>
+

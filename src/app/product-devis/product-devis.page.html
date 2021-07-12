@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>products</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" [routerLink]="['/home']">
+        <ion-icon slot="icon-only" name="home-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content >
+  <ion-list lines="none" *ngIf="produits">
+
+  <ion-item *ngFor="let prod of produits">
+    <ion-thumbnail slot="start">
+      <img src="{{serverUrl + prod.image}}">
+    </ion-thumbnail>
+    <div class="prod-infos">
+      <h3>{{prod.nom}}</h3>
+      <ion-button size="small" fill="solid" shape="round" color="activblue" [routerLink]="['/devis/' + prod.id]" translate>
+        <ion-icon slot="start" name="cash-outline"></ion-icon>
+        make_devis
+      </ion-button>
+    </div>
+  </ion-item>
+</ion-list>
+</ion-content>

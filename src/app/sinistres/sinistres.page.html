@@ -1,0 +1,96 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>sinistres</ion-title>
+    <ion-buttons slot="end" *ngIf='contract'>
+      <ion-button fill="clear" color="light" [routerLink]="['/contract-menu/' + contract.contract_infos.num_contrat]">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar *ngIf="contract">
+    <div class="quicklinks">
+      <div>
+        <ion-button fill="clear" color="light">
+          <span *ngIf="translateService.currentLang === 'fr'">{{contract.contract_infos.type_contrat.designation}}</span>
+          <span *ngIf="translateService.currentLang === 'en'">{{contract.contract_infos.type_contrat.designation_en}}</span>
+            <ion-icon slot="icon-only" [name]="icones[contract.contract_infos.type_contrat.designation]" slot="end"></ion-icon>
+        </ion-button>
+        <span color="light">Contrat numéro: {{contract.contract_infos.num_contrat}}</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div *ngIf="sinistres && (contract.type==='non_vie' && contract.contract_infos.type_contrat.for_bien === 1)">
+    <ion-card class="border-blue" *ngFor="let sinistre of sinistres">
+      <ion-card-content>
+        <ion-item [routerLink]="['/details-sinistre/' + sinistre.id + '/' + contractId]" class="ion-activated" lines="none">
+          <ion-icon name="flash-off-outline" color="primary" slot="start"></ion-icon>
+          <div class="contract-infos">
+            <ion-label color="primary">{{sinistre.biensassures.designation}}</ion-label>
+            <ion-label color="dark">{{sinistre.nature_dommage}}</ion-label>
+            <ion-label color="dark"> <small> Date: {{sinistre.date_sinistre}}</small></ion-label>
+          </div>
+          <ion-icon name="arrow-forward-outline" color="primary" slot="end"></ion-icon>
+        </ion-item>
+      </ion-card-content>
+      <ion-card-header color="primary">
+        <ion-icon name="hourglass-outline" color="danger" slot="start"></ion-icon>
+        {{sinistre.statut}}
+      </ion-card-header>
+    </ion-card>
+  </div>
+
+  <div *ngIf="sinistres && (contract.type==='vie' || contract.contract_infos.type_contrat.for_bien === 0)">
+    <ion-card class="border-blue" *ngFor="let sinistre of sinistres">
+      <ion-card-content>
+        <ion-item [routerLink]="['/details-sinistre/' + sinistre.id + '/' + contractId]" class="ion-activated" lines="none">
+          <ion-icon name="flash-off-outline" color="primary" slot="start"></ion-icon>
+          <div class="contract-infos">
+            <ion-label color="primary">{{sinistre.assures.nom}}</ion-label>
+            <ion-label color="dark"> <small> Date:{{sinistre.date_sinistre}}</small></ion-label>
+          </div>
+          <ion-icon name="arrow-forward-outline" color="primary" slot="end"></ion-icon>
+        </ion-item>
+      </ion-card-content>
+      <ion-card-header color="primary">
+        <ion-icon name="hourglass-outline" color="danger" slot="start"></ion-icon>
+        {{sinistre.statut}}
+      </ion-card-header>
+    </ion-card>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="contract && contract.contract_infos.statut==='En cours'">
+    <ion-fab-button size="small" color="success" [routerLink]="['/declaration-sinistre/' + contract.contract_infos.num_contrat]">
+      <ion-icon slot="start" name="flash-off-outline"></ion-icon>
+      <span translate>request_claim</span> 
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- <div>
+    <ion-card class="border-blue">
+      <ion-card-content>
+        <ion-item class="ion-activated" lines="none">
+          <ion-icon name="car-sport-outline" color="primary" slot="start"></ion-icon>
+          <div class="contract-infos">
+            <ion-label color="primary">Toyota Corola E5588</ion-label>
+            <ion-label color="dark">Délit de fuite</ion-label>
+            <ion-label color="dark"> <small> Déclaré le 25/09/2020</small></ion-label>
+          </div>
+          <ion-icon name="eye-outline" color="primary" slot="end"></ion-icon>
+        </ion-item>
+      </ion-card-content>
+      <ion-card-header color="primary">
+        <ion-icon name="hourglass-outline" color="danger" slot="start"></ion-icon>
+        En cours de traitement
+      </ion-card-header>
+    </ion-card>
+  </div> -->
+
+</ion-content>

@@ -1,0 +1,62 @@
+import { Component, OnInit } from '@angular/core';
+import { UtilsService } from '../services/utils/utils.service';
+import { ContractsService } from '../services/contracts/contracts.service';
+import { StorageService } from '../services/storage/storage.service';
+import { DevisService } from '../services/devis/devis.service';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-renew-paiement',
+  templateUrl: './renew-paiement.page.html',
+  styleUrls: ['./renew-paiement.page.scss'],
+})
+export class RenewPaiementPage implements OnInit {
+
+  public num_contrat: any;
+  public myDate: any;
+  public contract: any;
+  public paymean: any;
+  public paying_amount = 0;
+  public integrateurs: any;
+  constructor(private utilsService: UtilsService, private router: Router, private activatedRoute: ActivatedRoute, private contractsService: ContractsService, private storageService: StorageService) {
+    this.num_contrat = this.activatedRoute.snapshot.paramMap.get('contract_num');
+    this.loadContract();
+  }
+
+  ngOnInit() {
+    this.myDate = new Date;
+  }
+
+  async loadContract() {
+    this.contract = await this.contractsService.loadContract(this.num_contrat);
+    this.paying_amount = this.contract.contract_infos.prime;
+    this.loadIntegrateurs();
+  }
+
+  async loadIntegrateurs() {
+    this.integrateurs = await this.contractsService.loadIntegratorInfos();
+    console.log(this.integrateurs);
+  }
+
+  async momoPay(form) {
+    let infos = form.form.value;
+    let res = await this.contractsService.sendPaymentOrRenewInfos(infos, this.contract.contract_infos.prime, this.num_contrat, true);
+    if(res===true) {
+      this.router.navigate(['/renew-history/'+this.num_contrat]);
+    }
+  }
+
+  getKeys(json_object) {
+    return Object.keys(json_object);
+  }
+
+  getOperator(event) {
+    this.paymean = event.detail.value;
+  }
+
+  getPeriods(event) {
+    this.paying_amount *= event.detail.value;
+  }
+
+}

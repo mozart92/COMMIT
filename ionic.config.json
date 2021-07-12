@@ -1,0 +1,8 @@
+{
+  "name": "My Activa",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

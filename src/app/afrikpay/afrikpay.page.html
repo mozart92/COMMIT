@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>momo_payment_title</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/home"> 
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+    <div *ngIf="devis_result" class="paybox">
+  
+      <div>
+  
+        <h3><span translate>card_payment_text</span>: {{amount}} {{devise}}</h3>
+    
+        <form #momoPayForm="ngForm" (ngSubmit)="momoPay(momoPayForm)">
+          <ion-list lines="none">
+            <ion-item color="none">
+              <ion-label color="activblue" position="floating" translate>
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                payment_mean</ion-label>
+                <ion-select name="operateur" value="brown" okText="J'ai fini" cancelText="Fermer" ngModel (ionChange)="getOperator($event)">
+                  <ion-select-option *ngFor="let key of getKeys(devis_result.integrateur_momo.operators)" value="{{key}}">{{devis_result.integrateur_momo.operators[key]}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+    
+            <ion-item color="none">
+              <ion-label color="activblue" position="floating" translate>
+                <ion-icon name="call-outline"></ion-icon>
+                debited_phone</ion-label>
+                <ion-input type="tel" name="telephone" ngModel required="required"></ion-input>
+            </ion-item>
+    
+            <ion-item color="none" *ngIf="paymean==='orange_money_cm'">
+              <ion-label color="activblue" position="floating" translate>
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                merchant_code</ion-label>
+                <ion-input type="number" name="code_marchand" ngModel required="required"></ion-input>
+                <small>{{devis_result.integrateur_momo.message_code}}</small>
+            </ion-item>
+          </ion-list>
+    
+          
+          <ion-button expand="block" color="activblue" type="submit" [disabled]="momoPayForm.invalid" translate>card_payment_button</ion-button>
+        </form>
+      </div>
+    </div>
+
+</ion-content>

@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>user_claims</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" [routerLink]="['/dashboard']">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <div *ngIf="sinistres">
+    <ion-card class="border-blue" *ngFor="let sinistre of sinistres.non_vie">
+      <ion-card-content>
+        <ion-item [routerLink]="['/details-sinistre/' + sinistre.id + '/' + sinistre.contrat_non_vie.num_contrat]" class="ion-activated" lines="none">
+          <ion-icon [name]="sinister_icone[sinistre.contrat_non_vie.num_contrat]" color="primary" slot="start"></ion-icon>
+          <div class="contract-infos">
+            <ion-label *ngIf="sinistre.assures" color="primary">{{sinistre.assures.nom}}</ion-label>
+            <ion-label *ngIf="sinistre.biensassures" color="primary">{{sinistre.biensassures.designation}}</ion-label>
+            <ion-label *ngIf="sinistre.biensassures" color="dark">{{sinistre.nature_dommage}}</ion-label>
+            <ion-label color="dark"> <small> Date: {{sinistre.date_sinistre  | date: 'dd/MM/yyyy  HH:MM'}}</small></ion-label>
+            <ion-label color="dark"> <small> Contrat: {{sinistre.contrat_non_vie.num_contrat}}</small></ion-label>
+          </div>
+          <ion-icon name="arrow-forward-outline" color="primary" slot="end"></ion-icon>
+        </ion-item>
+      </ion-card-content>
+      
+      <ion-card-header *ngIf="sinistre.statut !== 'Clôturé'" color="light">
+        <ion-icon name="hourglass-outline" color="danger" slot="start"></ion-icon>
+        <b>{{sinistre.statut}}</b>
+      </ion-card-header>
+      <ion-card-header *ngIf="sinistre.statut === 'Clôturé'" color="danger">
+        <ion-icon name="hourglass-outline" color="danger" slot="start"></ion-icon>
+        <b>{{sinistre.statut}}</b>
+      </ion-card-header>
+    </ion-card>
+  </div>
+
+  <div *ngIf="sinistres">
+    <ion-card class="border-blue" *ngFor="let sinistre of sinistres.vie">
+      <ion-card-content>
+        <ion-item [routerLink]="['/details-sinistre/' + sinistre.id + '/' + sinistre.contrat_vie.num_contrat]" class="ion-activated" lines="none">
+          <ion-icon [name]="sinister_icone[sinistre.contrat_vie.num_contrat]" color="primary" slot="start"></ion-icon>
+          <div class="contract-infos">
+            <ion-label color="primary">{{sinistre.assures.nom}}</ion-label>
+            <ion-label color="dark"> <small> Date:{{sinistre.date_sinistre  | date: 'dd/MM/yyyy  HH:MM'}}</small></ion-label>
+            <ion-label color="dark"> <small> Contrat: {{sinistre.contrat_vie.num_contrat}}</small></ion-label>
+          </div>
+          <ion-icon name="arrow-forward-outline" color="primary" slot="end"></ion-icon>
+        </ion-item>
+      </ion-card-content>
+      <ion-card-header *ngIf="sinistre.statut !== 'Clôturé'" color="light">
+        <ion-icon name="hourglass-outline" color="danger" slot="start"></ion-icon>
+        <b>{{sinistre.statut}}</b>
+      </ion-card-header>
+      <ion-card-header *ngIf="sinistre.statut === 'Clôturé'" color="danger">
+        <ion-icon name="hourglass-outline" color="danger" slot="start"></ion-icon>
+        <b>{{sinistre.statut}}</b>
+      </ion-card-header>
+    </ion-card>
+  </div>
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" color="success" (click)="presentPopover()">
+      <ion-icon slot="start" name="flash-off-outline"></ion-icon>
+      <span translate>request_claim</span>
+    </ion-fab-button>
+  </ion-fab>
+
+
+</ion-content>

@@ -1,0 +1,319 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light">Devis</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/home">
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+ </ion-header>
+ <ion-content>
+  <p translate>devis_intro</p>
+  <!-- Testing dynamic forms -->
+  <div *ngIf="is_sante && myDynamForm">
+    <form #formDevisSante="ngForm" (ngSubmit)="demandeDevisSante(formDevisSante)">
+      <ion-list lines="none" *ngIf="subsForm">
+        <h4 translate>souscrip_elt</h4>
+        <div  *ngFor="let field of subsForm">
+          <ion-item color="none" *ngIf="!field.is_list && field.type!=='date' && !field.is_special_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+            </ion-label>
+            <ion-input type="{{field.type}}" name="{{field.nom_champ}}" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)"></ion-input>
+          </ion-item>
+          <ion-item color="none" *ngIf="field.is_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+              </ion-label>
+              <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)">
+                <ion-select-option *ngFor="let option of splitString(field.valeurs, ',')" value="{{option}}">{{option}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+          <ion-item color="none" *ngIf="field.is_special_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+            </ion-label>
+              <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)">
+                <ion-select-option *ngFor="let option of splitString(field.valeurs, '--')" value="{{splitString(option, ':')[0]}}">{{splitString(option, ':')[1]}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+          <ion-item color="none" *ngIf="field.type==='date'">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+            </ion-label>
+            <ion-datetime name="{{field.nom_champ}}" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)"></ion-datetime>
+          </ion-item>
+        </div>
+      </ion-list>
+      <h4 translate>cotation_elt</h4>
+      <ion-list lines="none">
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span *ngIf="translateService.currentLang === 'fr'">{{myDynamForm[0].libelle}}</span>
+            <span *ngIf="translateService.currentLang === 'en'">{{myDynamForm[0].libelle_en}}</span>
+          </ion-label>     
+          <ion-input type="{{myDynamForm[0].type}}" name="{{myDynamForm[0].nom_champ}}" [min]="myDynamForm[0].min" [max]="myDynamForm[0].max" ngModel required="{{myDynamForm[0].requis}}" (ionChange)="repeatFields($event, myDynamForm[0].nom_champ, myDynamForm[0])"></ion-input>
+        </ion-item>
+        <div *ngIf="first_repeat">
+          <div *ngFor="let i of first_repeat">
+            <ion-item color="none" *ngIf="myDynamForm[3].is_list">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{myDynamForm[3].libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{myDynamForm[3].libelle_en}}</span>
+                n°{{i+1}}</ion-label>
+                <ion-select name="{{myDynamForm[3].nom_champ}}_{{i+1}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{myDynamForm[3].requis}}" (ionChange)="captureValue($event, (myDynamForm[3].nom_champ  + '_' + i+1))">
+                  <ion-select-option *ngFor="let option of splitString(myDynamForm[3].valeurs, ',')" value="{{option}}">{{option}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item color="none" *ngIf="myDynamForm[3].is_special_list">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{myDynamForm[3].libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{myDynamForm[3].libelle_en}}</span>
+              </ion-label>
+                <ion-select name="{{myDynamForm[3].nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{myDynamForm[3].requis}}" (ionChange)="captureValue($event, (myDynamForm[3].nom_champ  + '_' + i+1))">
+                  <ion-select-option *ngFor="let option of splitString(myDynamForm[3].valeurs, '--')" value="{{splitString(option, ':')[0]}}">{{splitString(option, ':')[1]}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+          </div>
+        </div>
+        <ion-item color="none">
+          <ion-label color="activblue" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            <span *ngIf="translateService.currentLang === 'fr'">{{myDynamForm[1].libelle}}</span>
+            <span *ngIf="translateService.currentLang === 'en'">{{myDynamForm[1].libelle_en}}</span>
+          </ion-label>
+          <ion-input type="{{myDynamForm[1].type}}" name="{{myDynamForm[1].nom_champ}}" [min]="myDynamForm[1].min" [max]="myDynamForm[1].max" ngModel required="{{myDynamForm[1].requis}}" (ionChange)="repeatSndFields($event, myDynamForm[1].nom_champ, myDynamForm[1])"></ion-input>
+        </ion-item>
+        <div *ngIf="second_repeat">
+          <div *ngFor="let i of second_repeat">
+            <ion-item color="none" *ngIf="myDynamForm[2].is_list">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{myDynamForm[2].libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{myDynamForm[2].libelle_en}}</span>
+                n°{{i+1}}</ion-label>
+                <ion-select name="{{myDynamForm[2].nom_champ}}_{{i+1}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{myDynamForm[2].requis}}" (ionChange)="captureValue($event, (myDynamForm[2].nom_champ  + '_' + i+1))">
+                  <ion-select-option *ngFor="let option of splitString(myDynamForm[2].valeurs, ',')" value="{{option}}">{{option}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+           
+            <ion-item color="none" *ngIf="myDynamForm[2].is_special_list">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{myDynamForm[2].libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{myDynamForm[2].libelle_en}}</span>
+              </ion-label>
+                <ion-select name="{{myDynamForm[2].nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{myDynamForm[2].requis}}" (ionChange)="captureValue($event, (myDynamForm[2].nom_champ  + '_' + i+1))">
+                  <ion-select-option *ngFor="let option of splitString(myDynamForm[2].valeurs, '--')" value="{{splitString(option, ':')[0]}}">{{splitString(option, ':')[1]}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+          </div>
+        </div>
+      </ion-list>
+      <p *ngIf="number_err_mess">** {{number_err_mess}} **</p>
+      <ion-button expand="block" color="activblue" type="submit" [disabled]="formDevisSante.invalid  || !min_max_valid">Estimer</ion-button>
+    </form>
+  </div>
+  <div *ngIf="!byApi && !is_sante && myDynamForm">
+    <form #formDevis="ngForm" (ngSubmit)="demandeDevis(formDevis)">
+      <ion-list lines="none" *ngIf="subsForm">
+        <h4 translate>souscrip_elt</h4>
+        <div  *ngFor="let field of subsForm">
+          <ion-item color="none" *ngIf="!field.is_list && field.type!=='date' && !field.is_special_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+            </ion-label>
+            <ion-input type="{{field.type}}" name="{{field.nom_champ}}" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)"></ion-input>
+          </ion-item>
+          <ion-item color="none" *ngIf="field.is_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+            </ion-label>
+              <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)">
+                <ion-select-option *ngFor="let option of splitString(field.valeurs, ',')" value="{{option}}">{{option}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+         
+          <ion-item color="none" *ngIf="field.is_special_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+            </ion-label>
+              <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)">
+                <ion-select-option *ngFor="let option of splitString(field.valeurs, '--')" value="{{splitString(option, ':')[0]}}">{{splitString(option, ':')[1]}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+          <ion-item color="none" *ngIf="field.type==='date'">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+            </ion-label>
+            <ion-datetime name="{{field.nom_champ}}" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)"></ion-datetime>
+          </ion-item>
+        </div>
+      </ion-list>
+      <h4 *ngIf="myDynamForm.length>0" translate>cotation_elt</h4>
+      <ion-list lines="none">
+        <div  *ngFor="let field of myDynamForm">
+          <div *ngIf="!field.display_name || (field.display_name && special_values.includes(field.display_name))">
+            <ion-item color="none" *ngIf="!field.is_list && field.type!=='date' && !field.is_special_list">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="person-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+              </ion-label>
+              <ion-input *ngIf="!field.min && !field.max" type="{{field.type}}" name="{{field.nom_champ}}" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)"></ion-input>
+              <ion-input *ngIf="field.min && field.max" type="{{field.type}}" name="{{field.nom_champ}}" [min]="field.min" [max]="field.max" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ, field)"></ion-input>
+            </ion-item>
+          </div>
+         
+          <div *ngIf="!field.display_name || (field.display_name && special_values.includes(field.display_name))">
+            <ion-item color="none" *ngIf="field.is_list">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+              </ion-label>
+                <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)">
+                  <ion-select-option *ngFor="let option of splitString(field.valeurs, ',')" value="{{option}}">{{option}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+          </div>
+         
+          <div *ngIf="!field.display_name || (field.display_name && special_values.includes(field.display_name))">
+            <ion-item color="none" *ngIf="field.is_special_list">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+              </ion-label>
+                <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ, field)">
+                  <ion-select-option *ngFor="let option of splitString(field.valeurs, '--')" value="{{splitString(option, ':')[0]}}">{{splitString(option, ':')[1]}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+          </div>
+         
+          <div *ngIf="!field.display_name || (field.display_name && special_values.includes(field.display_name))">
+            <ion-item color="none" *ngIf="field.type==='date'">
+              <ion-label color="activblue" position="floating">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+              </ion-label>
+              <ion-datetime name="{{field.nom_champ}}" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)"></ion-datetime>
+            </ion-item>
+          </div>
+        </div>
+       
+   
+      <small *ngIf="message">** {{message}} **</small>
+      </ion-list>
+       <ion-button expand="block" color="activblue" type="submit" [disabled]="formDevis.invalid || !min_max_valid">Estimer</ion-button>
+    </form>
+  </div>
+  <div *ngIf="byApi && !is_sante && myDynamForm">
+    <form #formDevisApi="ngForm" (ngSubmit)="demandeDevisApi(formDevisApi)">
+      <ion-list lines="none" *ngIf="subsForm">
+     
+        <h4 translate>souscrip_elt</h4>
+        <div  *ngFor="let field of subsForm">
+          <ion-item color="none" *ngIf="!field.is_list && field.type!=='date' && !field.is_special_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              {{field.libelle}}</ion-label>
+            <ion-input type="{{field.type}}" name="{{field.nom_champ}}" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)"></ion-input>
+          </ion-item>
+          <ion-item color="none" *ngIf="field.is_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              {{field.libelle}}</ion-label>
+              <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)">
+                <ion-select-option *ngFor="let option of splitString(field.valeurs, ',')" value="{{option}}" >{{option}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+          <ion-item color="none" *ngIf="field.is_special_list">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+              <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+            </ion-label>
+              <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)">
+                <ion-select-option *ngFor="let option of splitString(field.valeurs, '--')" value="{{splitString(option, ':')[0]}}">{{splitString(option, ':')[1]}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+          <ion-item color="none" *ngIf="field.type==='date'">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              {{field.libelle}}</ion-label>
+            <ion-datetime name="{{field.nom_champ}}" ngModel required="{{field.requis}}" (ionChange)="captureValue($event, field.nom_champ)"></ion-datetime>
+          </ion-item>
+        </div>
+      </ion-list>
+      <h4 translate>cotation_elt</h4>
+      <ion-list lines="none">
+        <ion-item color="none" *ngIf="myDynamForm.Coverages">
+          <ion-label color="activblue" position="floating">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+            Garanties</ion-label>
+            <ion-select name="garanties" okText="J'ai fini" cancelText="Fermer" ngModel required="required" multiple (ionChange)="captureGarantieValue($event, 'garanties')">
+              <ion-select-option *ngFor="let cover of myDynamForm.Coverages" value="{{cover.CoverageCode}}">{{cover.CoverageName_FR}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <div  *ngFor="let field of myDynamForm.FormControls">
+          <ion-item color="none" *ngIf="field.Options">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="person-outline"></ion-icon>
+              {{field.FormControlName_FR}}</ion-label>
+              <ion-select name="{{field.FormControlCode}}" okText="J'ai fini" cancelText="Fermer" ngModel required="required" (ionChange)="captureListValue($event, field.FormControlCode)">
+                <ion-select-option *ngFor="let option of field.Options" value="{{option.Code}}">{{option.Name}}</ion-select-option>
+              </ion-select>
+          </ion-item>
+          <ion-item color="none" *ngIf="!field.Options && (field.DataType==='int' || field.DataType==='float')">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              {{field.FormControlName_FR}}</ion-label>
+              <ion-input type="number" name="{{field.FormControlCode}}" ngModel required="required" (ionChange)="captureValue($event, field.FormControlCode)"></ion-input>
+          </ion-item>
+          <ion-item color="none" *ngIf="!field.Options && field.DataType==='string'">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="checkmark-done-outline"></ion-icon>
+              {{field.FormControlName_FR}}</ion-label>
+              <ion-input type="text" name="{{field.FormControlCode}}" ngModel required="required" (ionChange)="captureValue($event, field.FormControlCode)"></ion-input>
+          </ion-item>
+          <ion-item color="none" *ngIf="!field.Options && field.DataType==='date'">
+            <ion-label color="activblue" position="floating">
+              <ion-icon name="calendar-outline"></ion-icon>
+              {{field.FormControlName_FR}}</ion-label>
+            <ion-datetime name="{{field.FormControlCode}}" displayFormat="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" ngModel required="required" (ionChange)="captureValue($event, field.FormControlCode)"></ion-datetime>
+          </ion-item>
+        </div>
+      </ion-list>
+       <ion-button expand="block" color="activblue" type="submit" [disabled]="formDevisApi.invalid" translate>estim_button</ion-button>
+    </form>
+  </div>
+ </ion-content>
+  
+  
+ 
+ 

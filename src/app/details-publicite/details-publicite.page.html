@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>activa_advert</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/home"> 
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content *ngIf="pub">
+  <!-- <div class="logo-div">
+    <img src="../../assets/activa-logo.png">
+    <div class="green-bar"></div>
+  </div> -->
+
+  <ion-img [src]="serverUrl + pub.chemin_acces"></ion-img>
+
+  <p [innerHTML]="pub.description"></p>
+
+  <!-- <ion-button shape="round" color="activblue">
+    Demander un devis
+  </ion-button> -->
+
+</ion-content>

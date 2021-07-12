@@ -1,0 +1,19 @@
+<ion-content>
+  <h3 translate>choose_country</h3>
+  <ion-list lines="none" *ngIf="pays">
+    <ion-item *ngFor="let coun of pays" (click)="choosePays(coun.id)">
+      <ion-avatar slot="start">
+        <ion-img [src]="flags[coun.iso3]"></ion-img>
+        <!-- <img src="../../assets/rdc.png"> -->
+      </ion-avatar>
+      <ion-label>{{coun.name}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [routerLink]="['/login']" color="activblue">
+      <ion-icon name="lock-open-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

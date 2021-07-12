@@ -1,0 +1,67 @@
+ion-header {
+    
+    background: linear-gradient(45deg, rgba(2, 0, 36, 0.9) 0%, rgba(9, 9, 121, .9) 35%, rgba(0, 212, 255, 0.97) 100%) ,url(../../assets/pattern.jpg) !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+ion-toolbar {
+    --background: none;
+    --padding-bottom: 0.5em;
+}
+
+.devis {
+    margin: auto;
+    display: flex;
+    width: 80%;
+    height: 100%;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    >div{
+        display: flex;
+        flex-direction: column;
+        border: 3px solid var(--ion-color-activblue);
+        padding: 10px 20px;
+        margin: 10px 0;
+        border-radius: 0 10px 0 10px;
+        text-align: center;
+        img {
+            max-width: 50%;
+            margin: 5px auto;
+        }
+        ion-grid {
+            margin-inline-start: 0 !important;
+            margin-inline-end: 0 !important;
+        }
+        p {
+            text-align: center;
+        }
+        b {
+            color: var(--ion-color-activeblue);
+            font-size: 18px;
+        }
+        ion-list{
+            width: 100%;
+            div{
+                width: 100%;
+            }
+            ion-item {
+                width: 100vw;
+                ion-label {
+                    word-wrap: normal;
+                }
+                // text-overflow: ellipsis;
+            }
+        }
+    }
+    
+}
+
+h3 {
+    font-weight: bolder;
+    text-transform: uppercase;
+    text-decoration: underline;
+}

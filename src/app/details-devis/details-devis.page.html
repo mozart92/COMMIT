@@ -1,0 +1,160 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>devis_detail</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button fill="clear" color="light" defaultHref="/dashboard"> 
+        <ion-icon slot="icon-only" name="arrow-undo-outline"></ion-icon>
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list *ngIf="devis">
+
+    <div class="infos-bien" *ngIf="devis.statut === 2">
+      <h5 translate>subs_title</h5>
+      <p> <span translate>devis_intro_1</span>  {{devis.produit.nom}} <span translate>devis_intro_2</span> {{devis.prime}}{{devis.devise}} <span translate>devis_intro_3</span>. </p>
+      <form #form="ngForm" (ngSubmit)="respondOffer(form)">
+
+        <ion-radio-group allow-empty-selection="false" name="respond" (ionChange)="chooseAnswer($event)" ngModel>
+          <ion-list-header>
+            <ion-label color="dark">
+              <ion-icon name="person-outline"></ion-icon>
+              <span translate>devis_question</span>
+            </ion-label>
+          </ion-list-header>
+
+          <ion-item lines="none" color="none">
+            <ion-label color="dark" translate>yes_answer</ion-label>
+            <ion-radio value="Offre acceptée"></ion-radio>
+          </ion-item>
+          <ion-item lines="none" color="none">
+            <ion-label color="dark" translate>no_answer</ion-label>
+            <ion-radio value="Offre refusée"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+
+        <div *ngIf="subs_form">
+          <p translate>assur_info</p>
+          <ion-list lines="none" *ngIf="repeat_form">
+        
+            <div *ngFor="let i of listof(repeat_form)">
+              <h4><span translate>assured_text</span> n°{{i+1}}</h4>
+              <div  *ngFor="let field of subs_form.form_souscription">
+                <ion-item color="none" *ngIf="field.is_list">
+                  <ion-label color="activblue" position="floating">
+                    <ion-icon name="checkmark-done-outline"></ion-icon>
+                    <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                    <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+                  </ion-label>
+                    <ion-select name="{{field.nom_champ}}_{{i+1}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="checkAnswer($event)">
+                      <ion-select-option *ngFor="let option of splitString(field.valeurs)" value="{{option}}">{{option}}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+    
+                <ion-item color="none" *ngIf="!field.is_list && field.type!=='date'">
+                  <ion-label color="activblue" position="floating">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                    <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+                  </ion-label>
+                  <ion-input type="{{field.type}}" name="{{field.nom_champ}}_{{i+1}}" ngModel required="{{field.requis}}"></ion-input>
+                </ion-item>
+    
+                <ion-item color="none" *ngIf="field.type==='date'">
+                  <ion-label color="activblue" position="floating">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                    <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+                  </ion-label>
+                  <ion-datetime name="{{field.nom_champ}}_{{i+1}}" ngModel required="{{field.requis}}"></ion-datetime>
+                </ion-item>
+    
+              </div>
+          
+            </div>
+    
+          </ion-list>
+    
+          <ion-list lines="none" *ngIf="!repeat_form">
+  
+            <div  *ngFor="let field of subs_form.form_souscription">
+              <ion-item color="none" *ngIf="field.is_list">
+                <ion-label color="activblue" position="floating">
+                  <ion-icon name="checkmark-done-outline"></ion-icon>
+                  <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                  <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+                </ion-label>
+                  <ion-select name="{{field.nom_champ}}" okText="J'ai fini" cancelText="Fermer" ngModel required="{{field.requis}}" (ionChange)="checkAnswer($event)">
+                    <ion-select-option *ngFor="let option of splitString(field.valeurs)" value="{{option}}">{{option}}</ion-select-option>
+                  </ion-select>
+              </ion-item>
+  
+              <ion-item color="none" *ngIf="!field.is_list && field.type!=='date'">
+                <ion-label color="activblue" position="floating">
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                  <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+                </ion-label>
+                <ion-input type="{{field.type}}" name="{{field.nom_champ}}" ngModel required="{{field.requis}}"></ion-input>
+              </ion-item>
+  
+              <ion-item color="none" *ngIf="field.type==='date'">
+                <ion-label color="activblue" position="floating">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <span *ngIf="translateService.currentLang === 'fr'">{{field.libelle}}</span>
+                  <span *ngIf="translateService.currentLang === 'en'">{{field.libelle_en}}</span>
+                </ion-label>
+                <ion-datetime name="{{field.nom_champ}}" ngModel required="{{field.requis}}"></ion-datetime>
+              </ion-item>
+  
+            </div>
+    
+          </ion-list>
+
+        </div>
+
+        <ion-item lines="none" color="none" *ngIf="offer === 'Offre refusée'">
+          <ion-label color="dark"  position="stacked">
+            <ion-icon name="person-outline"></ion-icon>
+            <span translate>refus_label</span></ion-label>
+          <ion-textarea rows="6" cols="20" name="motif" placeholder="Ecrivez ici..." ngModel required></ion-textarea>
+        </ion-item>
+        
+        <ion-button expand="block" color="success" type="submit" [disabled]="!offer || form.invalid">Répondre</ion-button>
+      </form>
+    </div>
+
+    <ion-item >
+      <ion-label translate>amount </ion-label>
+      <ion-badge slot="end">{{devis.prime}} {{devis.devise}}</ion-badge>
+    </ion-item>
+
+    <ion-item >
+      <ion-label translate>emision_date </ion-label>
+      <ion-badge slot="end">{{devis.created_at  | date: 'dd/MM/yyyy  HH:mm'}}</ion-badge>
+    </ion-item>
+
+    <ion-item >
+      <ion-label translate>product </ion-label>
+      <ion-badge slot="end">{{devis.produit.nom}}</ion-badge>
+    </ion-item>
+
+    <ion-item >
+      <ion-label translate>status </ion-label>
+      <ion-badge slot="end" color="secondary">{{devis.statut_human}}</ion-badge>
+    </ion-item>
+
+    <ion-item *ngFor="let key of getKeys(devis_recap)" >
+      <ion-label>{{key}} </ion-label>
+      <ion-badge slot="end" color="secondary">{{devis_recap[key]}}</ion-badge>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>

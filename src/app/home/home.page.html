@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="light" translate>home</ion-title>
+    <ion-buttons slot="end">
+      <!-- <ion-button *ngIf="user_status === false" fill="clear" color="light" (click)="switch_language()">
+        <ion-icon slot="start" name="globe-outline"></ion-icon>
+        {{language}}
+      </ion-button> -->
+      <ion-button *ngIf="user_status === false" fill="clear" color="light" [routerLink]="['/login']" translate>
+        <ion-icon slot="start" name="lock-open-outline"></ion-icon>
+        login
+      </ion-button>
+      <ion-button *ngIf="user_status === true" fill="clear" color="light" [routerLink]="['/dashboard']">
+        <ion-icon slot="start" name="home-outline"></ion-icon>
+        DASHBOARD
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content class="card-background-page">
+  <div class="blue-band">
+    <ion-button fill="clear" color="light" [routerLink]="['/product-devis']" translate>
+      devis_request
+    </ion-button>
+    <span> | </span>
+    <ion-button fill="clear" color="light" [routerLink]="['/all-produits']" translate>
+      products
+    </ion-button>
+  </div>
+
+
+  <ion-slides *ngIf="pubs" [options]="slideOpts">
+    <ion-slide *ngFor="let pub of pubs" [routerLink]="['/details-publicite/' + pub.id]">
+      <img src="{{serverUrl + pub.chemin_acces}}">
+    </ion-slide>
+  </ion-slides>
+
+  <h1 translate>welcome_message</h1>,
+
+  <p translate>intro_text</p>
+
+  <div class="products" *ngIf="produits">
+    <ion-card *ngFor="let pub of produits" [routerLink]="['/details-produit/' + pub.id]">
+      <img src="{{serverUrl + pub.image}}">
+      <div class="card-title">{{pub.nom}}</div>
+    </ion-card>
+  </div>
+
+
+</ion-content>
